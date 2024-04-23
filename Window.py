@@ -17,9 +17,8 @@ from config_parser.CConfig import CConfig, MAX_PALLET_PLACES
 from components.CPalletInfoBox import CPalletInfoBOX
 from components.CPalletLabel import CPalletLabel
 from components.CControlPanel import CControlPanel
-
-current_pallet = None
-
+from components.CSNInput import CSNinput
+from components.CPallet import CPallet
 
 class MainWindow(QMainWindow):
 
@@ -55,12 +54,32 @@ class MainWindow(QMainWindow):
         self.cpallets_box.set_block_frame()
 
         self.cpallet_label = CPalletLabel(self.ui)
-        self.cpallet_label.set_template(self.cconfig.get_pallet_template())
+        pallet_template = self.cconfig.get_pallet_template()
+        self.cpallet_label.set_default_text(pallet_template)
         self.cpallet_label.clear()
 
         self.ccontrol_box = CControlPanel(self.ui)
         self.ccontrol_box.set_max_places(0)
         self.ccontrol_box.set_last_places(0)
+
+        self.csn_input = CSNinput(self.ui)
+        tv_template = self.cconfig.get_tv_template()
+        self.csn_input.set_clear_label()
+
+        # todo Запрет на совпадение шаблонов
+        if pallet_template == tv_template:
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                             text="Ошибка в заданных шаблонах!\n"
+                                  "Шаблоны ТВ и паллета совпадают!\n\n"
+                                  "Обратитесь к системному администратору, так быть не должно.",
+                             title="Внимание!",
+                             variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
+            return
+
+        self.cpallet = CPallet()
+        self.cpallet.set_pallet_template(pallet_template)
+        self.cpallet.set_tv_template(tv_template)
+
 
         # slots
         self.ui.pushButton_info.clicked.connect(lambda: self.on_user_pressed_info_btn())
@@ -70,7 +89,31 @@ class MainWindow(QMainWindow):
         self.ui.le_main.returnPressed.connect(lambda: self.on_user_input_sn_or_pallet())
 
     def on_user_input_sn_or_pallet(self):
-        print(self.ui.le_main.text())
+        input_text = self.csn_input.get_current_text()
+        template_pallet = self.cpallet.get_pallet_template()
+        template_tv = self.cpallet.get_tv_template()
+
+        if self.cpallet.is_pallet_chosen():  # Палет выбран
+            if self.cpallet.is_pattern_match(template_tv, input_text):
+                #  Паттерн совпал с заданным
+                empty_places = self.cpallets_box.get_pallet_empty_places()
+                max_places = self.cpallets_box.get_max_places()
+
+                if empty_places == 0:
+                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                     text=f"Ошибка работы программы!!! У паллета почему то свободно 0 мест!",
+                                     title="Внимание!",
+                                     variant_yes="Закрыть", variant_no="", callback=None)
+                    return
+            else:
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                 text=f"Шаблон серийного номера телевизора не совпал с указанным серийным номером! '{template_tv}' ->| '{input_text}'",
+                                 title="Внимание!",
+                                 variant_yes="Закрыть", variant_no="", callback=None)
+                self.cpallet_label.clear()
+                return
+
+
 
     def on_user_pressed_pallet_complete(self):
         pass
@@ -91,3 +134,4 @@ class MainWindow(QMainWindow):
     @staticmethod
     def set_close():
         sys.exit()
+

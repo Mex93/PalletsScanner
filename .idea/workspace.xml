@@ -4,38 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/palletScanner.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common_func.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/CControlPanel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/CPalletInfoBox.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/CPalletLabel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/CSNInput.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/enums.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/CSQL.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/CSQLAgent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/enums.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/sql_connect_vars.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/delete_forever_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/help_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/interface.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/logo.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/pallet_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/task_alt_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="first">
+      <change afterPath="$PROJECT_DIR$/components/CPallet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CPalletLabel.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CPalletLabel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CSNInput.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CSNInput.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_parser/CConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +99,36 @@
       <option name="presentableId" value="Default" />
       <updated>1713852417784</updated>
     </task>
+    <task id="LOCAL-00001" summary="first">
+      <option name="closed" value="true" />
+      <created>1713872718166</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713872718166</updated>
+    </task>
+    <task id="LOCAL-00002" summary="first">
+      <option name="closed" value="true" />
+      <created>1713872871199</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713872871199</updated>
+    </task>
+    <task id="LOCAL-00003" summary="first">
+      <option name="closed" value="true" />
+      <created>1713874086520</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713874086520</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first" />
+    <option name="LAST_COMMIT_MESSAGE" value="first" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
