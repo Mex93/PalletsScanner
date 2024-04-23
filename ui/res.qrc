@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="images">
+    <file>logo.ico</file>
+  </qresource>
+  <qresource prefix="icons">
+    <file>delete_forever_FILL0_wght400_GRAD0_opsz40.svg</file>
+    <file>help_FILL0_wght400_GRAD0_opsz40.svg</file>
+    <file>pallet_FILL0_wght400_GRAD0_opsz40.svg</file>
+    <file>task_alt_FILL0_wght400_GRAD0_opsz40.svg</file>
+  </qresource>
+</RCC>

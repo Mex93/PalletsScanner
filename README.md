@@ -1,4 +1,9 @@
-# Набор WEB Дашбордов для сборочного производства.
-# JS frontend(Chart.js), py backend (Flask) 
+# Программа для комплектования паллетов с телевизорами
 
-WEB Dashboards for Kvant
+# Компиляция интерфейса:
+```bash
+pyside6-uic .\ui\untitled.ui -o .\ui\untitled.py
+```
+```bash
+pyside6-rcc .\ui\res.qrc -o .\ui\res_rc.py
+```
