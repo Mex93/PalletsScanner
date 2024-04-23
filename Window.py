@@ -9,7 +9,7 @@ from openpyxl.styles import (
     Alignment, Font
 )
 
-from common_func import send_message_box, SMBOX_ICON_TYPE
+from common_func import send_message_box, SMBOX_ICON_TYPE, get_about_text, get_rules_text
 from ui.interface import Ui_MainWindow
 
 from config_parser.CConfig import CConfig, MAX_PALLET_PLACES
@@ -63,9 +63,14 @@ class MainWindow(QMainWindow):
         self.ccontrol_box.set_last_places(0)
 
         # slots
-        self.ui.pushButton_info.clicked.connect(lambda: self.on_user_pressed_info_btn)
-        self.ui.pushButton_set_cancel.clicked.connect(lambda: self.on_user_pressed_pallet_cancel)
-        self.ui.pushButton_set_complete.clicked.connect(lambda: self.on_user_pressed_pallet_complete)
+        self.ui.pushButton_info.clicked.connect(lambda: self.on_user_pressed_info_btn())
+        self.ui.pushButton_set_cancel.clicked.connect(lambda: self.on_user_pressed_pallet_cancel())
+        self.ui.pushButton_set_complete.clicked.connect(lambda: self.on_user_pressed_pallet_complete())
+
+        self.ui.le_main.returnPressed.connect(lambda: self.on_user_input_sn_or_pallet())
+
+    def on_user_input_sn_or_pallet(self):
+        print(self.ui.le_main.text())
 
     def on_user_pressed_pallet_complete(self):
         pass
@@ -73,8 +78,15 @@ class MainWindow(QMainWindow):
     def on_user_pressed_pallet_cancel(self):
         pass
 
-    def on_user_pressed_info_btn(self):
-        pass
+    @classmethod
+    def on_user_pressed_info_btn(cls):
+        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                         text=f"{get_about_text()}"
+                              f"\n"
+                              f"\n"
+                              f"{get_rules_text()}",
+                         title="О программе",
+                         variant_yes="Закрыть", variant_no="")
 
     @staticmethod
     def set_close():

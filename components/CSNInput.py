@@ -7,6 +7,9 @@ class CSNinput:
         self.input_field = interface.le_main
         self.pallet_template = ""
 
+    def set_clear_label(self):
+        self.input_field.clear()
+
     def set_pallet_template(self, string: str):
         self.pallet_template = string
 
