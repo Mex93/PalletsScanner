@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/palletScanner.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common_func.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/CControlPanel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/CPalletInfoBox.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/CPalletLabel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/CSNInput.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/enums.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/CSQL.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/CSQLAgent.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/enums.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/sql_connect_vars.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/delete_forever_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/help_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/interface.ui" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/logo.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/pallet_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ui/task_alt_FILL0_wght400_GRAD0_opsz40.svg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2fUOv7zN0qCpyO2MWC6z8mu3JjC" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/Ryazanov/PycharmProjects/palletScanner",
+    "two.files.diff.last.used.folder": "C:/Users/Ryazanov/PycharmProjects/palletScanner/sql"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner" />
+      <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner\ui" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner\components" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="palletScanner" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="" />
+      <created>1713852417784</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713852417784</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
