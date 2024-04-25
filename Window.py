@@ -118,7 +118,8 @@ class MainWindow(QMainWindow):
         template_pallet = self.cpallet.get_pallet_template()
         template_tv = self.cpallet.get_tv_template()
 
-        # TODO антифлуд впилить
+        if AntiFlood.is_flood() is False:
+            return
 
         if self.program_job_type == JOB_TYPE.INFO:  # сканировка демонстрация
 
@@ -132,33 +133,40 @@ class MainWindow(QMainWindow):
                         if result_connect is True:
 
                             input_text = input_text.upper().replace(" ", "")
-                            result = csql.get_pallet_info(input_text)
 
-                            if result is not False and len(result) > 0:
-                                count_not_find = 0
-                                count = 0
-                                self.cpallets_box.clear_box()
-                                for item in result:
-                                    tv_sn = item.get(SQL_PALLET_SCANNED.fd_tv_sn, None)
-                                    if tv_sn is not None:
-                                        self.cpallets_box.set_sn_in_pallet(tv_sn)
-                                        count += 1
-                                    else:
-                                        count_not_find += 1
+                            if csql.is_created_pallet(input_text) is True:
 
-                                if count_not_find > 0:
-                                    self.send_error_message(
-                                        "Во время получения данных списка устройств на паллете возникла ошибка.\n"
-                                        "Один из SN на паллете = 'None'!\n\n"
-                                        "Код ошибки: 'on_user_input_sn_or_pallet -> get_info_data'")
-                                    return
+                                result = csql.get_pallet_info(input_text)
+                                if result is not False and len(result) > 0:
+                                    count_not_find = 0
+                                    count = 0
+                                    self.cpallets_box.clear_box()
+                                    for item in result:
+                                        tv_sn = item.get(SQL_PALLET_SCANNED.fd_tv_sn, None)
+                                        if tv_sn is not None:
+                                            self.cpallets_box.set_sn_in_pallet(tv_sn)
+                                            count += 1
+                                        else:
+                                            count_not_find += 1
 
-                                if count > 0:
-                                    self.cpallet.set_pallet_chosen(input_text)
-                                    self.cpallet_label.set_name(input_text)
+                                    if count_not_find > 0:
+                                        self.send_error_message(
+                                            "Во время получения данных списка устройств на паллете возникла ошибка.\n"
+                                            "Один из SN на паллете = 'None'!\n\n"
+                                            "Код ошибки: 'on_user_input_sn_or_pallet -> get_info_data'")
+                                        return
 
-                                    return
+                                    if count > 0:
+                                        self.cpallet.set_pallet_chosen(input_text)
+                                        self.cpallet_label.set_name(input_text)
 
+                                        return
+
+                                else:
+                                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                     text=f"Указанный паллет '{input_text}' найден, но не имеет привязанных телевизоров!",
+                                                     title="Внимание!",
+                                                     variant_yes="Закрыть", variant_no="", callback=None)
                             else:
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                  text=f"Указанный паллет '{input_text}' не найден!",
@@ -203,10 +211,18 @@ class MainWindow(QMainWindow):
                     return
 
     def on_user_pressed_pallet_complete(self):
+
+        if AntiFlood.is_flood() is False:
+            return
+
         if self.program_job_type == JOB_TYPE.INFO:
             return
 
     def on_user_pressed_pallet_cancel(self):
+
+        if AntiFlood.is_flood() is False:
+            return
+
         if self.program_job_type == JOB_TYPE.INFO:
             return
 
@@ -242,7 +258,9 @@ class AntiFlood:
         unix = get_current_unix_time()
         if cls.__anti_flood_load_data != unix:
             cls.__connects = 0
+            cls.__anti_flood_load_data = unix
         cls.__connects += 1
+
         if cls.__connects > cls.__max_connects:
             return True
 

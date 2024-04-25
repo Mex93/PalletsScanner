@@ -1,5 +1,5 @@
 from sql.CSQLAgent import CSqlAgent
-from sql.sql_data import SQL_TABLE_NAME, SQL_PALLET_SCANNED
+from sql.sql_data import SQL_TABLE_NAME, SQL_PALLET_SCANNED, SQL_PALLET_SN
 from config_parser.CConfig import MAX_PALLET_PLACES
 
 
@@ -8,6 +8,25 @@ class CSQLQuerys(CSqlAgent):
 
     def __init__(self):
         super().__init__()
+
+    def is_created_pallet(self, pallet_code: str):
+
+        query_string = (f"SELECT {SQL_PALLET_SN.fd_assy_id} "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_sn} "
+                        f"WHERE {SQL_PALLET_SN.fd_pallet_code} = %s "
+                        f"ORDER BY {SQL_PALLET_SN.fd_assy_id} ASC "
+                        f"LIMIT 1")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code, ), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+
+        sql_pass = result[0].get(SQL_PALLET_SN.fd_assy_id, None)
+        if sql_pass is not None:
+            return True
+
+        return False
 
     def get_pallet_info(self, pallet_code: str):
 
