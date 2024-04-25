@@ -10,3 +10,6 @@ class CControlPanel:
 
     def set_last_places(self, places: int):
         self.interface.label_last_places.setText("Осталось мест: " + str(places))
+
+    def disable_place_info(self):
+        self.interface.places_frame.setEnabled(False)  # не работает для лайаутов

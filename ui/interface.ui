@@ -107,7 +107,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
+              <layout class="QVBoxLayout" name="places_frame">
                <item>
                 <widget class="QLabel" name="label_all_places">
                  <property name="font">
@@ -150,7 +150,7 @@
               </spacer>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout">
+              <layout class="QVBoxLayout" name="btn_frame">
                <item>
                 <spacer name="horizontalSpacer_5">
                  <property name="orientation">

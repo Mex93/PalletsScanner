@@ -81,8 +81,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.places_frame = QVBoxLayout()
+        self.places_frame.setObjectName(u"places_frame")
         self.label_all_places = QLabel(self.groupBox)
         self.label_all_places.setObjectName(u"label_all_places")
         font2 = QFont()
@@ -90,26 +90,26 @@ class Ui_MainWindow(object):
         font2.setUnderline(True)
         self.label_all_places.setFont(font2)
 
-        self.verticalLayout_3.addWidget(self.label_all_places)
+        self.places_frame.addWidget(self.label_all_places)
 
         self.label_last_places = QLabel(self.groupBox)
         self.label_last_places.setObjectName(u"label_last_places")
         self.label_last_places.setFont(font2)
 
-        self.verticalLayout_3.addWidget(self.label_last_places)
+        self.places_frame.addWidget(self.label_last_places)
 
 
-        self.horizontalLayout_4.addLayout(self.verticalLayout_3)
+        self.horizontalLayout_4.addLayout(self.places_frame)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.btn_frame = QVBoxLayout()
+        self.btn_frame.setObjectName(u"btn_frame")
         self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.verticalLayout.addItem(self.horizontalSpacer_5)
+        self.btn_frame.addItem(self.horizontalSpacer_5)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -157,10 +157,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.pushButton_set_complete)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.btn_frame.addLayout(self.horizontalLayout_3)
 
 
-        self.horizontalLayout_4.addLayout(self.verticalLayout)
+        self.horizontalLayout_4.addLayout(self.btn_frame)
 
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_4)

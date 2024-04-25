@@ -65,7 +65,7 @@ class CPalletInfoBOX:
     def clear_box(self):
         self.sn_list = []
         for index in range(0, MAX_PALLET_PLACES):
-            self.sn_list.append(self.empty_place_text)
+            self.sn_list.append(-1)
             self.labels[index].setStyleSheet(u"color:gray")
             self.labels[index].setText(self.empty_place_text)
 
@@ -82,16 +82,17 @@ class CPalletInfoBOX:
 
     def set_sn_in_pallet(self, sn: str) -> bool:
         for index in range(0, self.max_place):
-            if self.sn_list[index] == self.empty_place_text:
+            if isinstance(self.sn_list[index], int) and self.sn_list[index] == -1:
                 self.labels[index].setStyleSheet(u"color:blue")
                 self.labels[index].setText(sn)
+                self.sn_list[index] = sn
                 return True
         return False
 
     def get_pallet_empty_places(self) -> int:
         count = 0
         for index in range(0, self.max_place):
-            if self.sn_list[index] == self.empty_place_text:
+            if isinstance(self.sn_list[index], int) and self.sn_list[index] == -1:
                 count += 1
         return count
 

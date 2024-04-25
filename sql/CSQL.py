@@ -173,6 +173,7 @@ class csql_eng:
         try:
             # print(self.__db_connect_data)
 
+            # print(self.__db_connect_data)
             connect_handle = psycopg2.connect(host=self.__db_connect_data[KEY_VALUE_NAME_HOST],
                                               database=self.__db_connect_data[KEY_VALUE_NAME_DATABASE],
                                               user=self.__db_connect_data[KEY_VALUE_NAME_USER],

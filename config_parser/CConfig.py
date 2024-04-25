@@ -3,7 +3,7 @@ from os import path
 from cryptography.fernet import Fernet
 
 from sql.CSQLAgent import CSqlAgent
-
+from enums import JOB_TYPE
 MAX_PALLET_PLACES = 36
 
 class ConfigError(Exception):
@@ -74,7 +74,7 @@ class CConfig:
             self.__config.set('database', 'SQL_PORT', 'This place for db port!')
             self.__config.set('database', 'SQL_DATABASE', 'This place for db name!')
 
-            self.__config.set('program', 'PROGRAM_JOB_TYPE', '0')
+            self.__config.set('program', 'PROGRAM_JOB_TYPE', str(JOB_TYPE.MAIN))
 
             self.__config.set('pallet', 'PALLET_MAX_PLACES', '2')
             self.__config.set('pallet', 'PALLET_AUTO_COMPLETE', '1')
@@ -113,9 +113,9 @@ class CConfig:
     def get_soft_job_type(self) -> int:
         """Тип работы программы [0 - внесение, 1 - просмотр из бд]"""
         numb = int(self.__SOFT_TYPE)
-        if numb in (0, 1):
+        if numb in (JOB_TYPE.MAIN, JOB_TYPE.INFO):
             return numb
-        return 0
+        return JOB_TYPE.MAIN
 
     def get_dbpassword(self):
         return self.__SQL_PASSWORD
@@ -150,14 +150,22 @@ class CConfig:
         db_port = self.get_dbport()
         db_host = self.get_dbhost()
 
-        # key = Fernet.generate_key()
-        # print("keu: " + str(key))
-        crypto_key = "AHTmrPcRWlPQUziaJhvrXuiMk13mUKY4K6lLynozCjU="  # ключ для расшифровки
+        # crypto_key = Fernet.generate_key()
+        # print("keu: " + str(crypto_key))
+        crypto_key = "OWChcLRfYg7QtEkaLYw_g-594QPRFmrsEQxMWry0wVQ="  # ключ для расшифровки
         cipher_suite = Fernet(crypto_key)
 
-        # cipher_text = cipher_suite.encrypt(b"program_tv_unloader")
+        # db_standart_connect_params = {
+        #     KEY_VALUE_NAME_USER: 'test_user',
+        #     KEY_VALUE_NAME_PASS: 'sadmin',
+        #     KEY_VALUE_NAME_DATABASE: 'test_db',
+        #     KEY_VALUE_NAME_HOST: '192.168.7.182',
+        #     KEY_VALUE_NAME_PORT: '5432'
+        # }
+
+        # cipher_text = cipher_suite.encrypt(b"program_palletscanner")
         # print(cipher_text)
-        # cipher_text = cipher_suite.encrypt(b"rg0wehcfoiueqjhfw4hgvnd")
+        # cipher_text = cipher_suite.encrypt(b"UG5de7g6FGryxs67TGhuV")
         # print(cipher_text)
         # cipher_text = cipher_suite.encrypt(b"assemblyproduction")
         # print(cipher_text)
@@ -179,6 +187,7 @@ class CConfig:
                 db_user = db_user.decode()
                 db_pass = cipher_suite.decrypt(db_pass)
                 db_pass = db_pass.decode()
+
             except:
                 set_config_error = True
 

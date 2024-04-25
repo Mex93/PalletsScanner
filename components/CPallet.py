@@ -10,6 +10,10 @@ class CPallet:
         return len(cls.current_chosen_palet) > 0
 
     @classmethod
+    def get_pallet_chosen(cls):
+        return cls.current_chosen_palet
+
+    @classmethod
     def set_pallet_chosen(cls, text: str):
         cls.current_chosen_palet = text
 
