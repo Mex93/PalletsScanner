@@ -196,7 +196,7 @@ class Ui_MainWindow(object):
         self.le_main.setFont(font5)
         self.le_main.setInputMask(u"")
         self.le_main.setText(u"")
-        self.le_main.setMaxLength(15)
+        self.le_main.setMaxLength(40)
         self.le_main.setFrame(True)
         self.le_main.setEchoMode(QLineEdit.EchoMode.Normal)
         self.le_main.setAlignment(Qt.AlignmentFlag.AlignCenter)

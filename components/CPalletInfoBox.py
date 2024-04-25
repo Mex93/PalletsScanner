@@ -89,6 +89,13 @@ class CPalletInfoBOX:
                 return True
         return False
 
+    def get_closest_places(self):
+        count = 0
+        for index in range(0, self.max_place):
+            if isinstance(self.sn_list[index], str):
+                count += 1
+        return count
+
     def get_pallet_empty_places(self) -> int:
         count = 0
         for index in range(0, self.max_place):

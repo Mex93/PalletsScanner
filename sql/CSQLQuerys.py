@@ -44,6 +44,22 @@ class CSQLQuerys(CSqlAgent):
 
         return result
 
+    def insert_scanned_tv_on_pallet(self, pallet_code: str):
+
+        query_string = (f"SELECT * "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_scanned} "
+                        f"WHERE {SQL_PALLET_SCANNED.fd_fk_pallet_code} = %s "
+                        f"ORDER BY {SQL_PALLET_SCANNED.fd_assy_id} ASC "
+                        f"LIMIT {MAX_PALLET_PLACES}")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code, ), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+        # print(result)
+
+        return result
+
     def get_data_list(self,
                       tv_fk: int,
                       assembled_line: int,

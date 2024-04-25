@@ -16,3 +16,7 @@ class CSNinput:
     def disabled_btns(self):
         self.interface.pushButton_set_cancel.setEnabled(False)
         self.interface.pushButton_set_complete.setEnabled(False)
+
+    def enable_btns(self):
+        self.interface.pushButton_set_cancel.setEnabled(True)
+        self.interface.pushButton_set_complete.setEnabled(True)
