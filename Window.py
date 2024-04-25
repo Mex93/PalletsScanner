@@ -177,6 +177,11 @@ class MainWindow(QMainWindow):
                         self.clear_current_pallet()
                         return
 
+
+                    # todo Проверка на наличие копии в паллете
+                    # todo проверка на наличие этого телика в другом паллете с теликами
+                    # todo проверка наличия созданого в assembled телека и его прохождение через станцию проверка комплектности (по дате)
+
                     if self.cpallets_box.set_sn_in_pallet(input_text) is True:
                         empty_places -= 1
                         self.ccontrol_box.set_last_places(empty_places)
