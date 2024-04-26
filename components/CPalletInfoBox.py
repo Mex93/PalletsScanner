@@ -49,11 +49,10 @@ class CPalletInfoBOX:
             interface.labeL_in_pall_34,
             interface.labeL_in_pall_35,
         ]
+        self.sn_list = []
 
         for index in range(0, MAX_PALLET_PLACES):
             self.labels[index].setText(self.empty_place_text)
-
-        self.sn_list = None
 
     def set_max_place(self, max_place: int):
         self.max_place = max_place
@@ -68,17 +67,6 @@ class CPalletInfoBOX:
             self.sn_list.append(-1)
             self.labels[index].setStyleSheet(u"color:gray")
             self.labels[index].setText(self.empty_place_text)
-
-        # self.sn_list = []
-        # for index in range(0,  self.max_place):
-        #     self.sn_list.append("Место свободно")
-        #     self.labels[index].setStyleSheet(u"color:blue")
-        #     self.labels[index].setText("Место свободно")
-        #
-        # for index in range(self.max_place,  MAX_PALLET_PLACES):
-        #     self.sn_list.append("---")
-        #     self.labels[index].setStyleSheet(u"color:gray")
-        #     self.labels[index].setText("----")
 
     def set_sn_in_pallet(self, sn: str) -> bool:
         for index in range(0, self.max_place):
@@ -95,6 +83,24 @@ class CPalletInfoBOX:
             if isinstance(self.sn_list[index], str):
                 count += 1
         return count
+
+    def get_place_index_from_tv_sn(self, tv_sn: str) -> int:
+        """Проверка на наличие в паллете"""
+        for index in range(0, self.max_place):
+            if isinstance(self.sn_list[index], str):
+                if self.sn_list[index] == tv_sn:
+                    return index
+        return -1
+
+    def clear_field(self, place_index: int) -> bool:
+        """Обнуление места"""
+        if isinstance(self.sn_list[place_index], str):
+            self.sn_list[place_index] = -1
+            self.labels[place_index].setStyleSheet(u"color:gray")
+            self.labels[place_index].setText(self.empty_place_text)
+            return True
+        return False
+
 
     def get_pallet_empty_places(self) -> int:
         count = 0
