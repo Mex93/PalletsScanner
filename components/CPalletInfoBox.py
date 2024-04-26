@@ -69,7 +69,7 @@ class CPalletInfoBOX:
             self.labels[index].setText(self.empty_place_text)
 
     def set_sn_in_pallet(self, sn: str) -> bool:
-        for index in range(0, self.max_place):
+        for index in range(0, MAX_PALLET_PLACES):
             if isinstance(self.sn_list[index], int) and self.sn_list[index] == -1:
                 self.labels[index].setStyleSheet(u"color:blue")
                 self.labels[index].setText(sn)

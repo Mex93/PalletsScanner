@@ -61,6 +61,23 @@ class CSQLQuerys(CSqlAgent):
 
         return result
 
+    def is_pallet_have_any_sn(self, pallet_code: str):
+        """Инфа о паллете"""
+        query_string = (f"SELECT * "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_scanned} "
+                        f"WHERE {SQL_PALLET_SCANNED.fd_fk_pallet_code} = %s "
+                        f"LIMIT 1")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code,), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+        # print(result)
+        if len(result) > 0:
+            return True
+
+        return False
+
     def get_tv_info(self, tv_sn: str) -> bool | dict:
         """Инфа о телевизоре"""
         query_string = (f"SELECT "
@@ -102,6 +119,28 @@ class CSQLQuerys(CSqlAgent):
 
         result = self.sql_query_and_get_result(
             self.get_sql_handle(), query_string, (pallet_code, tv_sn, tv_fk), "_i", )
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+
+        sql_pass = result[0][0]  # возвращает кортеж с одним элементом
+        if sql_pass is None:
+            return False
+
+        return sql_pass
+
+    def create_new_pallet(self, pallet_code: str) -> int | bool:
+        """ Создать паллет """
+
+        query_string = (f"INSERT INTO "
+                        f"{SQL_TABLE_NAME.tb_pallet_sn}"
+                        f"("
+                        f"{SQL_PALLET_SN.fd_pallet_code}"
+                        f") VALUES"
+                        f"(%s) "
+                        f"RETURNING {SQL_PALLET_SN.fd_assy_id}")
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code, ), "_i", )
         if result is False:  # Errorrrrrrrrrrrrr based data
             return False
 

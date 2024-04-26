@@ -314,7 +314,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Код SN или паллета:</string>
+                <string>SN TV или паллета:</string>
                </property>
               </widget>
              </item>

@@ -104,11 +104,11 @@ class CConfig:
             return numb
         return 2
 
-    def get_pallet_auto_completed(self) -> int:
+    def get_pallet_auto_completed(self) -> bool:
         numb = int(self.__PALLET_AUTO_COMPLETE)
         if numb in (0, 1):
-            return numb
-        return 0
+            return bool(numb)
+        return False
 
     def get_soft_job_type(self) -> int:
         """Тип работы программы [0 - внесение, 1 - просмотр из бд]"""

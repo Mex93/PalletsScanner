@@ -9,6 +9,10 @@ from PySide6.QtWidgets import QApplication
 #  pip freeze > requirements.txt
 
 if __name__ == '__main__':
+    """Программа упрощена 
+    Пометок в таблице поддонов нет о полной готовности
+    Все данные о количестве максимальном телеков берутся из конфига"""
+
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
