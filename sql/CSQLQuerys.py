@@ -128,6 +128,24 @@ class CSQLQuerys(CSqlAgent):
 
         return sql_pass
 
+    def set_completed_status(self, pallet_code: str, check_variant: bool) -> int | bool:
+        """ Проставить чек комплектности
+        False - не закрыт и установка даты текущей,
+        True - проставляет комплектность и дата текущей """
+        if isinstance(check_variant, bool):
+
+            query_string = (f"UPDATE {SQL_TABLE_NAME.tb_pallet_sn} SET "
+                            f"{SQL_PALLET_SN.fd_completed_check} = {check_variant},"
+                            f"{SQL_PALLET_SN.fd_completed_time} = now() "
+                            f"WHERE {SQL_PALLET_SN.fd_pallet_code} = %s "
+                            )
+            print(query_string)
+
+            result = self.sql_query_and_get_result(
+                self.get_sql_handle(), query_string, (pallet_code,), "_u", )
+            return result
+        return False
+
     def create_new_pallet(self, pallet_code: str) -> int | bool:
         """ Создать паллет """
 

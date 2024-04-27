@@ -11,7 +11,8 @@ class SQL_PALLET_SN:  # таблица созданных паллетов
     fd_assy_id = "assy_id"
     fd_pallet_code = "pallet_code"  # номер паллет
     fd_created_data = "created_data"  # Дата создания
-
+    fd_completed_check = "completed_check"  # Чек готовности
+    fd_completed_time = "completed_date"  # Чек даты готовности
 
 class SQL_PALLET_SCANNED:  # таблица привязки телеков к палеткам
     fd_assy_id = "assy_id"

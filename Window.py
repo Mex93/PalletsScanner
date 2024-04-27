@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         QFontDatabase.addApplicationFont("designs/Iosevka Bold.ttf")
         self.setWindowTitle(f'Сканирование паллетов TCL ООО Квант 2024 v{self.__base_program_version} '
-                            f'[Режим: создание паллет]')
+                            f'[Режим: Создание паллет]')
 
         # self.ui.centralwidget.setEnabled(False)  # на всякий блокирнём интерфейс
         # config ------------------------------
@@ -93,15 +93,15 @@ class MainWindow(QMainWindow):
         # slots
 
         if self.program_job_type == JOB_TYPE.MAIN:
-            self.ui.pushButton_set_cancel.clicked.connect(lambda: self.on_user_pressed_pallet_cancel())
-            self.ui.pushButton_set_complete.clicked.connect(lambda: self.on_user_pressed_pallet_complete())
+            self.ui.pushButton_set_cancel.clicked.connect(lambda: self.on_user_pressed_pallet_complete("cancel"))
+            self.ui.pushButton_set_complete.clicked.connect(lambda: self.on_user_pressed_pallet_complete("success"))
 
         self.csn_input.disabled_btns()
 
         # Если инфо мод то глушим ненужное
         if program_job_type == JOB_TYPE.INFO:
             self.setWindowTitle(f'Сканирование паллетов TCL ООО Квант 2024 v{self.__base_program_version} '
-                                f'[Режим: демонстрация укомплектованности паллет]')
+                                f'[Режим: Демонстрация укомплектованности паллет]')
 
             self.ccontrol_box.disable_place_info()
             self.ccontrol_box.set_last_places(0)
@@ -168,6 +168,7 @@ class MainWindow(QMainWindow):
                     # max_places = self.cpallets_box.get_max_places()
 
                     if empty_places <= 0:
+                        # TODO Вход при первичном вводе паллета если он полный
                         if self.auto_complect is True:
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                              text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
@@ -178,6 +179,10 @@ class MainWindow(QMainWindow):
 
                             self.clear_current_pallet()
                             # todo Паллет обнулён из за переполнения
+
+                            if self.set_pallet_completed_status(chosen_pallet, True) is False:
+                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 1")
+
                         else:  # автокомплект отключен
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                              text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
@@ -219,29 +224,6 @@ class MainWindow(QMainWindow):
 
                                 result = csql.get_tv_info(input_text)
                                 if result is not False:
-                                    # нет смысла в том что ниже, так как телек просто не создатся без сканировки серийника на линии
-                                    # scan_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_sn_scan_time, None)
-                                    # if scan_time is None:
-                                    #     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                    #                      text=f"Указанный серийный номер '{input_text}' не прошёл "
-                                    #                           f"первичную сканировку !\n"
-                                    #                           f"Позовите технолога!\n\n",
-                                    #                      title="Внимание!",
-                                    #                      variant_yes="Закрыть", variant_no="", callback=None)
-                                    #
-                                    #     self.csn_input.set_clear_label()
-                                    #     return
-                                    # sn_scan_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_sn_scan_time, None)
-                                    # if sn_scan_time is None:
-                                    #     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                    #                      text=f"Указанный серийный номер '{input_text}' не прошёл "
-                                    #                           f"привязку серийного номера !\n"
-                                    #                           f"Позовите технолога!\n\n",
-                                    #                      title="Внимание!",
-                                    #                      variant_yes="Закрыть", variant_no="", callback=None)
-                                    #
-                                    #     self.csn_input.set_clear_label()
-                                    #     return
 
                                     complect_check_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_completed_scan_time,
                                                                      None)
@@ -277,6 +259,7 @@ class MainWindow(QMainWindow):
                             csql.disconnect_from_db()
                         if tv_fk is not None and self.cpallets_box.set_sn_in_pallet(input_text) is True:
                             pallet_index = None
+
                             csql = CSQLQuerys()
                             try:
                                 result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
@@ -301,7 +284,7 @@ class MainWindow(QMainWindow):
                                 # todo SN заведён
 
                                 if empty_places <= 0:
-
+                                    # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
                                     if self.auto_complect is True:
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                          text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
@@ -309,6 +292,9 @@ class MainWindow(QMainWindow):
                                                               f"Паллет готов к отгрузке!",
                                                          title="Успех!",
                                                          variant_yes="Закрыть", variant_no="", callback=None)
+
+                                        if self.set_pallet_completed_status(chosen_pallet, True) is False:
+                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 2")
 
                                         self.clear_current_pallet()
                                         # todo Паллет обнулён из за переполнения
@@ -337,6 +323,8 @@ class MainWindow(QMainWindow):
                                     result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                                     if result_connect is True:
                                         csql.delete_tv_sn_from_pallet_scanned(chosen_pallet, input_text)
+                                        if self.set_pallet_completed_status(chosen_pallet, False, csql) is False:
+                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 3")
 
                                 except Exception as err:
                                     print(f"Ошибка: {err}")
@@ -351,7 +339,8 @@ class MainWindow(QMainWindow):
                                 return False
                     else:
                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                         text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным номером '{input_text}' !",
+                                         text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
+                                              f"номером '{input_text}' !",
                                          title="Внимание!",
                                          variant_yes="Закрыть", variant_no="", callback=None)
                         self.csn_input.set_clear_label()
@@ -380,7 +369,8 @@ class MainWindow(QMainWindow):
                                 if self.load_sns_in_pallet(input_text) is True:
                                     success_load = True
                             else:  # если паллета нет - создаём
-                                if csql.create_new_pallet(input_text) is True:
+
+                                if csql.create_new_pallet(input_text) is not False:
                                     if csql.is_pallet_have_any_sn(input_text) is False:
                                         success_load = True
                                     else:
@@ -418,12 +408,17 @@ class MainWindow(QMainWindow):
                             self.cpallet.set_pallet_chosen(input_text)
                             self.csn_input.set_clear_label()
                             self.csn_input.enable_btns()
+
+                            if self.set_pallet_completed_status(input_text, False) is False:
+                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
+
                             # todo Паллет заведён
                             return True
                         else:  # Мест нет
 
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                             text=f"В паллете '{input_text}' больше нет места. Выбор паллета сброшен!!!",
+                                             text=f"В паллете '{input_text}' больше нет места. Выбор паллета сброшен!!!\n\n"
+                                                  f"Вы можете изменить конфиг, добавив дополнительные места.",
                                              title="Внимание!",
                                              variant_yes="Закрыть", variant_no="", callback=None)
                             self.csn_input.set_clear_label()
@@ -438,6 +433,26 @@ class MainWindow(QMainWindow):
                                      title="Внимание!",
                                      variant_yes="Закрыть", variant_no="", callback=None)
                     self.csn_input.set_clear_label()
+        return False
+
+    def set_pallet_completed_status(self, pallette_code: str, variant: bool, sql_handle: any = False):
+
+        if sql_handle is False:
+            csql = CSQLQuerys()
+        else:
+            csql = sql_handle
+        try:
+            result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+            if result_connect is True:
+                if csql.set_completed_status(pallette_code, variant) is True:
+                    return True
+        except:
+            self.send_error_message(
+                "Во время установки статуса комплектности прозошла ошибка.\n"
+                "Обратитесь к системному администратору!\n\n"
+                "Код ошибки: 'load_job_mode -> auto_complect -> set_completed_status'")
+        finally:
+            csql.disconnect_from_db()
         return False
 
     def load_info_mode(self, input_text, template_pallet):
@@ -497,10 +512,19 @@ class MainWindow(QMainWindow):
                             return True
 
                     else:
-                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                         text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных телевизоров!",
-                                         title="Внимание!",
-                                         variant_yes="Закрыть", variant_no="", callback=None)
+                        if self.program_job_type == JOB_TYPE.INFO:
+                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                             text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных телевизоров!",
+                                             title="Внимание!",
+                                             variant_yes="Закрыть", variant_no="", callback=None)
+                        else:
+                            # send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                            #                  text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных телевизоров!",
+                            #                  title="Внимание!",
+                            #                  variant_yes="Закрыть", variant_no="", callback=None)
+                            # Даём так как можно открыть пустой паллет и заполнять его
+
+                            return True
                 else:
 
                     if self.program_job_type == JOB_TYPE.INFO:
@@ -521,7 +545,10 @@ class MainWindow(QMainWindow):
 
         return False
 
-    def on_user_pressed_pallet_complete(self):
+    def on_user_pressed_pallet_complete(self, variant: str):
+        """Слот на кнопки создать и отменить паллет
+        По сути одно и тоже. Только в отмене, если палет пустой, спросит отменить ли,
+        а в создании не даст отменить написав что нет телеков"""
 
         if AntiFlood.is_flood() is True:
             return
@@ -548,37 +575,61 @@ class MainWindow(QMainWindow):
                              variant_yes="Закрыть", variant_no="", callback=None)
             return
         if empty_places == max_places:
-            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                             text=f"На паллете '{pallette_code}' нет телевизоров.",
-                             title="Внимание!",
-                             variant_yes="Закрыть", variant_no="", callback=None)
+            if variant == "cancel":
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                 text=f"На паллете '{pallette_code}' нет телевизоров.\n\n"
+                                      f"Вы уверены, что хотите закончить формирование ?\n"
+                                      f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.",
+                                 title="Внимание!",
+                                 variant_yes="Да", variant_no="Нет",
+                                 callback=self.on_user_clicked_variant_on_btn_cancel)
+
+            elif variant == "success":
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                 text=f"На паллете '{pallette_code}' нет телевизоров.",
+                                 title="Внимание!",
+                                 variant_yes="Закрыть", variant_no="", callback=None)
             return
 
-        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                         text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
-                               f"Продолжить формирование можно в любой момент, просто введите номер этого паллета."),
-                         title="Внимание!",
-                         variant_yes="Да", variant_no="Нет",
-                         callback=self.on_user_clicked_variant_btn_pallette_complete)
+        if variant == "success":
+
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                             text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
+                                   f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n"
+                                   f"Статус для паллета будет установлен на 'Сформирован!'."),
+                             title="Внимание!",
+                             variant_yes="Да", variant_no="Нет",
+                             callback=self.on_user_clicked_variant_btn_pallette_complete)
+        elif variant == "cancel":
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                             text=(f"Вы уверены, что хотите отменить формирование паллета '{pallette_code}' ?\n\n"
+                                   f"Продолжить формирование можно в любой момент, просто введите номер этого паллета."),
+                             title="Внимание!",
+                             variant_yes="Да", variant_no="Нет",
+                             callback=self.on_user_clicked_variant_on_btn_cancel)
 
         return True
 
-    def on_user_clicked_variant_btn_pallette_complete(self, val):
+    def on_user_clicked_variant_on_btn_cancel(self, val):
         if val.text() == "Да":
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
         else:
             pass
 
-    def on_user_pressed_pallet_cancel(self):
+    def on_user_clicked_variant_btn_pallette_complete(self, val):
+        if val.text() == "Да":
 
-        if AntiFlood.is_flood() is True:
-            return
-        if not self.cpallet.is_pallet_chosen():
-            return
+            pallette_code = self.cpallet.get_pallet_chosen()
 
-        if self.program_job_type == JOB_TYPE.INFO:
-            return
+            if len(pallette_code) > 0:
+                if self.set_pallet_completed_status(pallette_code, True) is False:
+                    print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 4")
+
+            self.csn_input.set_clear_label()
+            self.clear_current_pallet()
+        else:
+            pass
 
     @classmethod
     def on_user_pressed_info_btn(cls):
