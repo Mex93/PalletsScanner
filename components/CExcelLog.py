@@ -1,4 +1,3 @@
-
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils.cell import get_column_interval
 from openpyxl.styles import (
@@ -40,6 +39,7 @@ class CExcelLog:
         shrink_to_fit=False,
         indent=0
     )
+
     def __init__(self):
         pass
 
@@ -101,7 +101,7 @@ class CExcelLog:
 
             # # Задаём фонт для столбцов с данными
 
-            #TODO Понять как весь лист ебануть под один шрифт
+            # TODO Понять как весь лист ебануть под один шрифт
             # Не получается ебануть строку, всё время она смещается вниз после стиля
 
             # cell_range = ws['A2':'D2500']
@@ -112,19 +112,14 @@ class CExcelLog:
             #         cell.font = cls.FONT_HEADER
             #         cell.alignment = cls.alignment
 
-
             wb.save(f"{cls.folder_name}/{file_name}")
             wb.close()
 
-            #except Exception as err:
-                #print(f"Внимание! Ошибка лога: '{err}'.")
-                #return False
+            # except Exception as err:
+            # print(f"Внимание! Ошибка лога: '{err}'.")
+            # return False
 
             # if os.path.exists(f"{cls.folder_name}/{file_name}") is True:
             #     pass
             # else:
             return True
-
-
-
-

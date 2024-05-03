@@ -190,4 +190,3 @@ class CSQLQuerys(CSqlAgent):
         return sql_pass
 
         # print(result)
-

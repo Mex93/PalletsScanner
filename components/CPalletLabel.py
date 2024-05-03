@@ -1,6 +1,5 @@
 from ui.interface import Ui_MainWindow
 import threading
-from config_parser.CConfig import MAX_PALLET_PLACES
 
 
 class CPalletLabel:

@@ -1,13 +1,12 @@
-from PySide6.QtWidgets import QMainWindow, QFileDialog
+from PySide6.QtWidgets import QMainWindow
 from PySide6.QtGui import QFontDatabase
 
 import sys
-import threading
 
 from common_func import send_message_box, SMBOX_ICON_TYPE, get_about_text, get_rules_text, get_current_unix_time
 from ui.interface import Ui_MainWindow
 from enums import JOB_TYPE
-from config_parser.CConfig import CConfig, MAX_PALLET_PLACES
+from config_parser.CConfig import CConfig
 
 from components.CPalletInfoBox import CPalletInfoBOX
 from components.CPalletLabel import CPalletLabel
@@ -251,7 +250,7 @@ class MainWindow(QMainWindow):
                                     self.csn_input.set_clear_label()
                                     return
 
-                        except Exception as err:
+                        except:
                             self.send_error_message(
                                 "Во время получения данных устройства возникла ошибка.\n"
                                 "Обратитесь к системному администратору!\n\n"
@@ -473,7 +472,7 @@ class MainWindow(QMainWindow):
     def load_info_mode(self, input_text, template_pallet):
         if self.cpallet.is_pattern_match(template_pallet, input_text):
 
-                # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
+            # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
             if self.load_sns_in_pallet(input_text) is True:
                 self.cpallet.set_pallet_chosen(input_text)
                 self.cpallet_label.set_name(input_text)
@@ -545,7 +544,7 @@ class MainWindow(QMainWindow):
                         return False
                     else:
                         return True
-        except Exception:
+        except:
             self.send_error_message(
                 "Во время получения данных списка устройств на паллете возникла ошибка.\n"
                 "Обратитесь к системному администратору!\n\n"
