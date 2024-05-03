@@ -37,12 +37,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.verticalLayout_6 = QVBoxLayout()
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.groupBox = QGroupBox(self.centralwidget)
-        self.groupBox.setObjectName(u"groupBox")
+        self.groupBox_Flashing = QGroupBox(self.centralwidget)
+        self.groupBox_Flashing.setObjectName(u"groupBox_Flashing")
         font = QFont()
         font.setPointSize(14)
-        self.groupBox.setFont(font)
-        self.verticalLayout_4 = QVBoxLayout(self.groupBox)
+        self.groupBox_Flashing.setFont(font)
+        self.groupBox_Flashing.setStyleSheet(u"")
+        self.verticalLayout_4 = QVBoxLayout(self.groupBox_Flashing)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -50,13 +51,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.label = QLabel(self.groupBox)
+        self.label = QLabel(self.groupBox_Flashing)
         self.label.setObjectName(u"label")
         self.label.setPixmap(QPixmap(u":/icons/pallet_FILL0_wght400_GRAD0_opsz40.svg"))
 
         self.horizontalLayout.addWidget(self.label)
 
-        self.label_pallet_name = QLabel(self.groupBox)
+        self.label_pallet_name = QLabel(self.groupBox_Flashing)
         self.label_pallet_name.setObjectName(u"label_pallet_name")
         font1 = QFont()
         font1.setPointSize(25)
@@ -65,6 +66,7 @@ class Ui_MainWindow(object):
         self.label_pallet_name.setToolTip(u"")
 #endif // QT_CONFIG(tooltip)
         self.label_pallet_name.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.label_pallet_name.setStyleSheet(u"background-color:none")
         self.label_pallet_name.setFrameShape(QFrame.Shape.StyledPanel)
         self.label_pallet_name.setLineWidth(8)
         self.label_pallet_name.setTextFormat(Qt.TextFormat.AutoText)
@@ -83,7 +85,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.places_frame = QVBoxLayout()
         self.places_frame.setObjectName(u"places_frame")
-        self.label_all_places = QLabel(self.groupBox)
+        self.label_all_places = QLabel(self.groupBox_Flashing)
         self.label_all_places.setObjectName(u"label_all_places")
         font2 = QFont()
         font2.setPointSize(15)
@@ -92,7 +94,7 @@ class Ui_MainWindow(object):
 
         self.places_frame.addWidget(self.label_all_places)
 
-        self.label_last_places = QLabel(self.groupBox)
+        self.label_last_places = QLabel(self.groupBox_Flashing)
         self.label_last_places.setObjectName(u"label_last_places")
         self.label_last_places.setFont(font2)
 
@@ -113,7 +115,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.pushButton_set_cancel = QPushButton(self.groupBox)
+        self.pushButton_set_cancel = QPushButton(self.groupBox_Flashing)
         self.pushButton_set_cancel.setObjectName(u"pushButton_set_cancel")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -138,7 +140,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_4)
 
-        self.pushButton_set_complete = QPushButton(self.groupBox)
+        self.pushButton_set_complete = QPushButton(self.groupBox_Flashing)
         self.pushButton_set_complete.setObjectName(u"pushButton_set_complete")
         sizePolicy.setHeightForWidth(self.pushButton_set_complete.sizePolicy().hasHeightForWidth())
         self.pushButton_set_complete.setSizePolicy(sizePolicy)
@@ -166,7 +168,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addLayout(self.horizontalLayout_4)
 
 
-        self.verticalLayout_6.addWidget(self.groupBox)
+        self.verticalLayout_6.addWidget(self.groupBox_Flashing)
 
         self.groupBox_3 = QGroupBox(self.centralwidget)
         self.groupBox_3.setObjectName(u"groupBox_3")
@@ -634,7 +636,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u0421\u043a\u0430\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u0430\u043b\u043b\u0435\u0442\u043e\u0432 TCL", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u043b\u043b\u0435\u0442:", None))
+        self.groupBox_Flashing.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u043b\u043b\u0435\u0442:", None))
         self.label.setText("")
         self.label_pallet_name.setText(QCoreApplication.translate("MainWindow", u"XXXXXXXXXX", None))
         self.label_all_places.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043c\u0435\u0441\u0442: 36", None))
@@ -642,7 +644,7 @@ class Ui_MainWindow(object):
         self.pushButton_set_cancel.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0430\u043b\u043b\u0435\u0442", None))
         self.pushButton_set_complete.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c \u043f\u0430\u043b\u043b\u0435\u0442", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\u0412\u0432\u043e\u0434:", None))
-        self.label_leinfo.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u0434 SN \u0438\u043b\u0438 \u043f\u0430\u043b\u043b\u0435\u0442\u0430:", None))
+        self.label_leinfo.setText(QCoreApplication.translate("MainWindow", u"SN TV \u0438\u043b\u0438 \u043f\u0430\u043b\u043b\u0435\u0442\u0430:", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"\u0412 \u043f\u0430\u043b\u043b\u0435\u0442\u0435 \u0443\u0436\u0435:", None))
         self.labeL_in_pall_0.setText(QCoreApplication.translate("MainWindow", u"2404DTF801280900001", None))
         self.labeL_in_pall_9.setText(QCoreApplication.translate("MainWindow", u"2404BCF207460C00001", None))

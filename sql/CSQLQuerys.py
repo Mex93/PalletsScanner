@@ -139,7 +139,6 @@ class CSQLQuerys(CSqlAgent):
                             f"{SQL_PALLET_SN.fd_completed_time} = now() "
                             f"WHERE {SQL_PALLET_SN.fd_pallet_code} = %s "
                             )
-            print(query_string)
 
             result = self.sql_query_and_get_result(
                 self.get_sql_handle(), query_string, (pallet_code,), "_u", )
