@@ -605,14 +605,27 @@ class MainWindow(QMainWindow):
             return
 
         if variant == "success":
+            # это заведомо неверно так как паллет задумывалось закрывать вручную без технолога,
+            # но Саша попросил что бы технолог контролировал!
+            # Поэтому только автозакрытие!
             self.cpallet_label.set_error(2, "yellow", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
-                                   f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
-                                   f"Статус для паллета будет установлен на 'Сформирован'."),
+                                   f"Паллет ещё не заполнен!\n\n"
+                                   f"Для принудительного закрытия позовите технолога, для "
+                                   f"изменения количества устройств в файле конфигурации."),
                              title="Внимание!",
-                             variant_yes="Да", variant_no="Нет",
-                             callback=self.on_user_clicked_variant_btn_pallette_complete)
+                             variant_yes="Закрыть", variant_no="",
+                             callback=None)
+
+            # self.cpallet_label.set_error(2, "yellow", "Внимание!")
+            # send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+            #                  text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
+            #                        f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
+            #                        f"Статус для паллета будет установлен на 'Сформирован'."),
+            #                  title="Внимание!",
+            #                  variant_yes="Да", variant_no="Нет",
+            #                  callback=self.on_user_clicked_variant_btn_pallette_complete)
         elif variant == "cancel":
             self.cpallet_label.set_error(2, "yellow", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
