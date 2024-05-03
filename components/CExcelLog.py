@@ -67,7 +67,7 @@ class CExcelLog:
             hours = cdate.hour
             mins = cdate.minute
 
-            file_name = f"pscanned_log_{day}.{month}.{year}.xlsx"
+            file_name = f"pscanned_log_{day:02}.{month:02}.{year}.xlsx"
 
             is_file_exists = False
             file_name_with_patch = f"{cls.folder_name}/{file_name}"
