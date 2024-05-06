@@ -145,19 +145,19 @@ class CSQLQuerys(CSqlAgent):
             return result
         return False
 
-    def create_new_pallet(self, pallet_code: str) -> int | bool:
+    def create_new_pallet(self, pallet_code: str, assembled_line: int) -> int | bool:
         """ Создать паллет """
 
         query_string = (f"INSERT INTO "
                         f"{SQL_TABLE_NAME.tb_pallet_sn}"
                         f"("
-                        f"{SQL_PALLET_SN.fd_pallet_code}"
+                        f"{SQL_PALLET_SN.fd_pallet_code}, {SQL_PALLET_SN.fd_assembled_line}"
                         f") VALUES"
-                        f"(%s) "
+                        f"(%s, %s) "
                         f"RETURNING {SQL_PALLET_SN.fd_assy_id}")
 
         result = self.sql_query_and_get_result(
-            self.get_sql_handle(), query_string, (pallet_code, ), "_i", )
+            self.get_sql_handle(), query_string, (pallet_code, assembled_line, ), "_i", )
         if result is False:  # Errorrrrrrrrrrrrr based data
             return False
 

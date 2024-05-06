@@ -3,8 +3,9 @@ from os import path
 from cryptography.fernet import Fernet
 
 from sql.CSQLAgent import CSqlAgent
-from enums import JOB_TYPE
+from enums import JOB_TYPE, REPEAT_TV_ERROR_TYPES
 MAX_PALLET_PLACES = 36
+
 
 class ConfigError(Exception):
     def __init__(self, m):
@@ -26,13 +27,14 @@ class CConfig:
         self.__PALLET_AUTO_COMPLETE = ''  # Автоматически закрывать паллет, если количество уже == максимальному
         self.__PALLET_TEMPLATE = ''  # Шаблон номера паллета
         self.__TV_TEMPLATE = ''  # Шаблон телевизора
+        self.__TV_REPEAT_ERROR_TYPE = ''  # Тип ошибки про повтор телека - 0 - Окно с подтверждением, 1 - Просто в чат
+        self.__CURRENT_LINE = ''  # Текущая производственная линия
 
         self.__config = configparser.ConfigParser()
         self.__config.add_section('database')
         self.__config.add_section('program')
         self.__config.add_section('pallet')
         self.__config.add_section('tv')
-
 
     def set_default_for_values(self):
         self.__SQL_USER_NAME = ''
@@ -45,6 +47,8 @@ class CConfig:
         self.__PALLET_AUTO_COMPLETE = ''
         self.__PALLET_TEMPLATE = ''
         self.__TV_TEMPLATE = ''
+        self.__TV_REPEAT_ERROR_TYPE = ''
+        self.__CURRENT_LINE = ''
 
     def get_config(self):
         self.__config.read('config.ini', encoding="utf-8")
@@ -54,11 +58,17 @@ class CConfig:
         self.__SQL_HOST = self.__config.get('database', 'SQL_HOST')
         self.__SQL_PORT = self.__config.get('database', 'SQL_PORT')
         self.__SQL_DATABASE = self.__config.get('database', 'SQL_DATABASE')
+
         self.__SOFT_TYPE = self.__config.get('program', 'PROGRAM_JOB_TYPE')
+        self.__CURRENT_LINE = self.__config.get('program', 'CURRENT_ASSEMBLED_LINE')
+
         self.__PALLET_ALL_PLACES = self.__config.get('pallet', 'PALLET_MAX_PLACES')
         self.__PALLET_AUTO_COMPLETE = self.__config.get('pallet', 'PALLET_AUTO_COMPLETE')
         self.__PALLET_TEMPLATE = self.__config.get('pallet', 'PALLET_TEMPLATE')
+
         self.__TV_TEMPLATE = self.__config.get('tv', 'TV_TEMPLATE')
+        self.__TV_REPEAT_ERROR_TYPE = self.__config.get('tv', 'TV_REPEAT_ERROR_TYPE')
+
 
     @staticmethod
     def is_config_created():
@@ -75,13 +85,33 @@ class CConfig:
             self.__config.set('database', 'SQL_DATABASE', 'This place for db name!')
 
             self.__config.set('program', 'PROGRAM_JOB_TYPE', str(JOB_TYPE.MAIN))
+            self.__config.set('program', 'CURRENT_ASSEMBLED_LINE', "1")
 
             self.__config.set('pallet', 'PALLET_MAX_PLACES', '2')
             self.__config.set('pallet', 'PALLET_AUTO_COMPLETE', '1')
             self.__config.set('pallet', 'PALLET_TEMPLATE', '****24****')
-            self.__config.set('tv', 'TV_TEMPLATE', '**********55C835*****')
+
+            self.__config.set('tv', 'TV_TEMPLATE', '*******')
+            self.__config.set('tv', 'TV_REPEAT_ERROR_TYPE', '0')
+
             self.set_default_for_values()
             self.__config.write(config_file)
+
+    def get_current_line(self) -> int | None:
+        line = int(self.__CURRENT_LINE)
+        if 1 <= line <= 4:
+            return line
+        return None
+
+    def get_repeat_tv_error_type(self) -> REPEAT_TV_ERROR_TYPES:
+        error_type = int(self.__TV_REPEAT_ERROR_TYPE)
+        if error_type == 0:
+            return REPEAT_TV_ERROR_TYPES.WINDOW
+        elif error_type == 1:
+            return REPEAT_TV_ERROR_TYPES.CHAT_MESSAGE
+        else:
+            return REPEAT_TV_ERROR_TYPES.WINDOW
+
 
     def get_pallet_template(self) -> str:
         template = self.__PALLET_TEMPLATE

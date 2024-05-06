@@ -44,7 +44,7 @@ class CExcelLog:
         pass
 
     @classmethod
-    def print_log(cls, pallett_code: str, tv_sn: str, tv_fk: int) -> bool:
+    def print_log(cls, pallett_code: str, tv_sn: str, tv_fk: int, assembled_line: int) -> bool:
 
         folder_its_ok = False
         if os.path.isdir(f"{cls.folder_name}"):
@@ -79,10 +79,10 @@ class CExcelLog:
                 wb = Workbook()
                 ws = wb.active
                 ws.title = "Сканировка паллетов"
-                ws.append(("Паллет №:", "SN телевизора:", "ID модели:", "Дата сканировки:"))
+                ws.append(("Паллет №:", "SN телевизора:", "ID модели:", "Дата сканировки:", "Производственная линия:"))
 
                 # задаём ширину и фонт для шапки
-                cell_range = ws['A1':'D1']
+                cell_range = ws['A1':'E1']
                 for i in cell_range:
                     for i2 in i:
                         letter_adress = i2.coordinate
@@ -90,14 +90,15 @@ class CExcelLog:
                         ws[letter_adress].font = cls.FONT_HEADER
                         ws[letter_adress].alignment = cls.alignment
 
-                interval = get_column_interval("A", "D")
+                interval = get_column_interval("A", "E")
                 for item in interval:
                     ws.column_dimensions[item].width = 60
             else:
                 wb = load_workbook(file_name_with_patch)
                 ws = wb.active
 
-            ws.append((pallett_code, tv_sn, tv_fk, f"{hours:02}:{mins:02}:{secs:02} {day:02}:{month:02}:{year}"))
+            ws.append((pallett_code, tv_sn, tv_fk, f"{hours:02}:{mins:02}:{secs:02} {day:02}:{month:02}:{year}",
+                       assembled_line))
 
             # # Задаём фонт для столбцов с данными
 

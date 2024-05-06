@@ -5,7 +5,7 @@ import sys
 
 from common_func import send_message_box, SMBOX_ICON_TYPE, get_about_text, get_rules_text, get_current_unix_time
 from ui.interface import Ui_MainWindow
-from enums import JOB_TYPE
+from enums import JOB_TYPE, REPEAT_TV_ERROR_TYPES
 from config_parser.CConfig import CConfig
 
 from components.CPalletInfoBox import CPalletInfoBOX
@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.__base_program_version = "0.1"  # Менять при каждом обновлении любой из подпрограмм
+        self.__base_program_version = "0.2"  # Менять при каждом обновлении любой из подпрограмм
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.set_block_interface()
@@ -40,25 +40,42 @@ class MainWindow(QMainWindow):
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                              text="Ошибка в файле конфигурации!\n"
                                   "Один или несколько параметров ошибочны!\n\n"
-                                  "Обратитесь к системному администратору.",
+                                  "Позовите технолога!",
                              title="Внимание!",
                              variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
             return
-        # ---------------------------------------
-        program_job_type = self.cconfig.get_soft_job_type()
-        self.program_job_type = program_job_type
 
-        self.auto_complect = self.cconfig.get_pallet_auto_completed()
+        # ---------------------------------------
+        try:
+            self.assembled_line = self.cconfig.get_current_line()
+            if self.assembled_line is None:
+                raise ValueError("Неверно выставлен номер производственной линии!!")
+
+            self.repeat_tv_error_type = self.cconfig.get_repeat_tv_error_type()
+            program_job_type = self.cconfig.get_soft_job_type()
+            self.auto_complect = self.cconfig.get_pallet_auto_completed()
+            max_places_in_pallets = self.cconfig.get_pallet_max_places()
+            pallet_template = self.cconfig.get_pallet_template()
+            tv_template = self.cconfig.get_tv_template()
+
+            self.program_job_type = program_job_type
+        except Exception as err:
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                             text="Ошибка в файле конфигурации!\n"
+                                  "Один или несколько параметров ошибочны!\n\n"
+                                  "Позовите технолога!\n\n"
+                                  f"Ошибка: '{err}'",
+                             title="Внимание!",
+                             variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
+            return
         # classes
 
-        max_places_in_pallets = self.cconfig.get_pallet_max_places()
         self.cpallets_box = CPalletInfoBOX(self.ui)
         self.cpallets_box.set_max_place(max_places_in_pallets)
         self.cpallets_box.set_block_frame()
         self.cpallets_box.clear_box()
 
         self.cpallet_label = CPalletLabel(self.ui)
-        pallet_template = self.cconfig.get_pallet_template()
         self.cpallet_label.set_default_text(pallet_template)
         self.cpallet_label.clear()
 
@@ -67,7 +84,7 @@ class MainWindow(QMainWindow):
         self.ccontrol_box.set_last_places(0)
 
         self.csn_input = CSNinput(self.ui)
-        tv_template = self.cconfig.get_tv_template()
+
         self.csn_input.set_clear_label()
 
         # todo Запрет на совпадение шаблонов
@@ -99,8 +116,10 @@ class MainWindow(QMainWindow):
                                 f'[Режим: Демонстрация укомплектованности паллет]')
 
             self.ccontrol_box.disable_place_info()
-            self.ccontrol_box.set_last_places(0)
-            self.ccontrol_box.set_max_places(0)
+            # self.ccontrol_box.set_last_places(0)
+            # self.ccontrol_box.set_max_places(0)
+            self.ccontrol_box.set_count_in_pallet(0)
+            self.ccontrol_box.set_clear_last_place()
             #
 
         self.ui.pushButton_info.clicked.connect(lambda: self.on_user_pressed_info_btn())
@@ -166,7 +185,7 @@ class MainWindow(QMainWindow):
                     if empty_places <= 0:
                         # TODO Вход при первичном вводе паллета если он полный
                         if self.auto_complect is True:
-                            self.cpallet_label.set_error(2, "green", "Паллет полон и автоматически закрыт!")
+                            self.cpallet_label.set_error(3, "green", "Паллет полон и автоматически закрыт!")
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                              text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
                                                   f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -282,14 +301,14 @@ class MainWindow(QMainWindow):
                                 self.ccontrol_box.set_last_places(empty_places)
                                 self.csn_input.set_clear_label()
 
-                                CExcelLog.print_log(chosen_pallet, input_text, tv_fk)
+                                CExcelLog.print_log(chosen_pallet, input_text, tv_fk, self.assembled_line)
 
                                 # todo SN заведён
 
                                 if empty_places <= 0:
                                     # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
                                     if self.auto_complect is True:
-                                        self.cpallet_label.set_error(2, "green", "Паллет сформирован и автозакрыт.")
+                                        self.cpallet_label.set_error(3, "green", "Паллет сформирован и автозакрыт.")
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                          text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
                                                               f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -303,7 +322,7 @@ class MainWindow(QMainWindow):
                                         self.clear_current_pallet()
                                         # todo Паллет обнулён из за переполнения
                                     else:  # автокомплект отключен
-                                        self.cpallet_label.set_error(2, "green", "Паллет успешно сформирован.")
+                                        self.cpallet_label.set_error(3, "green", "Паллет успешно сформирован.")
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                          text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
                                                               f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -346,13 +365,19 @@ class MainWindow(QMainWindow):
                                     self.cpallets_box.clear_field(sn_index)
                                 return False
                     else:
-                        self.cpallet_label.set_error(2, "red", "Внимание!")
-                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                         text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
-                                              f"номером '{input_text}' !",
-                                         title="Внимание!",
-                                         variant_yes="Закрыть", variant_no="", callback=None)
-                        self.csn_input.set_clear_label()
+                        if self.repeat_tv_error_type == REPEAT_TV_ERROR_TYPES.WINDOW:
+                            self.cpallet_label.set_error(2, "red", "Внимание!")
+
+                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                             text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
+                                                  f"номером '{input_text}' !",
+                                             title="Внимание!",
+                                             variant_yes="Закрыть", variant_no="", callback=None)
+                            self.csn_input.set_clear_label()
+                        else:
+                            self.cpallet_label.set_error(3, "yellow", f"Повтор SN: '{input_text}'")
+                            self.csn_input.set_clear_label()
+
                         return
 
                 else:
@@ -376,12 +401,21 @@ class MainWindow(QMainWindow):
                         result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                         if result_connect is True:
                             if csql.is_created_pallet(input_text) is True:
-                                if self.load_sns_in_pallet(input_text) is True:
-                                    success_load = True
+
+                                result_open = self.load_sns_in_pallet(input_text)
+                                if isinstance(result_open, bool):
+                                    if result_open is True:
+                                        success_load = True
+                                elif isinstance(result_open, int):
+                                    if result_open > 0:
+                                        success_load = True
+
+                                if success_load is True:
                                     self.cpallet_label.set_error(2, "blue1", "Паллет открыт!")
+
                             else:  # если паллета нет - создаём
 
-                                if csql.create_new_pallet(input_text) is not False:
+                                if csql.create_new_pallet(input_text, self.assembled_line) is not False:
                                     if csql.is_pallet_have_any_sn(input_text) is False:
                                         success_load = True
                                         self.cpallet_label.set_error(2, "blue2", "Паллет успешно создан!")
@@ -475,8 +509,25 @@ class MainWindow(QMainWindow):
         if self.cpallet.is_pattern_match(template_pallet, input_text):
 
             # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
-            if self.load_sns_in_pallet(input_text) is True:
+            success_load = False
+            result_open = self.load_sns_in_pallet(input_text)
+            if isinstance(result_open, bool):
+                if result_open is True:
+                    success_load = True
+            elif isinstance(result_open, int):
+                if result_open > 0:
+                    success_load = True
+
+            if success_load is True:
                 self.cpallet.set_pallet_chosen(input_text)
+
+                if isinstance(result_open, int):
+                    self.ccontrol_box.set_count_in_pallet(result_open)
+                else:
+                    self.ccontrol_box.set_count_in_pallet(0)
+
+                # self.ccontrol_box.set_clear_last_place()
+
                 self.cpallet_label.set_name(input_text)
                 self.csn_input.set_clear_label()
                 self.cpallet_label.set_error(2, "grey",
@@ -492,7 +543,7 @@ class MainWindow(QMainWindow):
 
         return False
 
-    def load_sns_in_pallet(self, pallette_code: str) -> bool:
+    def load_sns_in_pallet(self, pallette_code: str) -> bool | int:
 
         csql = CSQLQuerys()
         try:
@@ -523,7 +574,7 @@ class MainWindow(QMainWindow):
 
                         if count > 0:
                             # todo Паллет открыт - инфа
-                            return True
+                            return count
 
                     else:
                         if self.program_job_type == JOB_TYPE.INFO:
@@ -579,6 +630,8 @@ class MainWindow(QMainWindow):
 
         empty_places = self.cpallets_box.get_pallet_empty_places()
         max_places = self.cpallets_box.get_max_places()
+        current_count_in_pallet = self.cpallets_box.get_closest_places()
+        # print(current_count_in_pallet)
 
         if max_places == 0:
             self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
@@ -623,15 +676,26 @@ class MainWindow(QMainWindow):
             #                  callback=None)
 
             # Мой изначальный код:
+            # если меньше чем в конфиге на паллете то пусть технолога зовут
+            if current_count_in_pallet == max_places:
 
-            self.cpallet_label.set_error(2, "yellow", "Внимание!")
-            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                             text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
-                                   f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
-                                   f"Статус для паллета будет установлен на 'Сформирован'."),
-                             title="Внимание!",
-                             variant_yes="Да", variant_no="Нет",
-                             callback=self.on_user_clicked_variant_btn_pallette_complete)
+                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                 text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
+                                       f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
+                                       f"Статус для паллета будет установлен на 'Сформирован'."),
+                                 title="Внимание!",
+                                 variant_yes="Да", variant_no="Нет",
+                                 callback=self.on_user_clicked_variant_btn_pallette_complete)
+            else:
+
+                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                 text=(f"Вы не можете завершить паллет '{pallette_code}', так как не все устройства отсканированы.\n\n"
+                                       f"Позовите технолога для завершения паллета с текущим количеством устройств."),
+                                 title="Внимание!",
+                                 variant_yes="Закрыть", variant_no="",
+                                 callback=None)
 
         elif variant == "cancel":
             self.cpallet_label.set_error(2, "yellow", "Внимание!")
@@ -646,10 +710,12 @@ class MainWindow(QMainWindow):
 
     def on_user_clicked_variant_on_btn_cancel(self, val):
         if val.text() == "Да":
+            pallette_code = self.cpallet.get_pallet_chosen()
+
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
 
-            self.cpallet_label.set_error(2, "yellow", "Паллет отменён!")
+            self.cpallet_label.set_error(3, "yellow", f"Паллет '{pallette_code}' отменён!")
         else:
             pass
 
@@ -664,8 +730,7 @@ class MainWindow(QMainWindow):
 
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
-            self.cpallet_label.set_error(3, "green", "Паллет сформирован!")
-
+            self.cpallet_label.set_error(3, "green", f"Паллет '{pallette_code}' сформирован!")
 
         else:
             pass
