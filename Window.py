@@ -416,11 +416,12 @@ class MainWindow(QMainWindow):
                         self.ccontrol_box.set_max_places(max_places)
                         self.ccontrol_box.set_last_places(empty_places)
                         self.cpallet_label.set_name(input_text)
-                        if empty_places > 0:  # Места ещё есть
 
-                            self.cpallet.set_pallet_chosen(input_text)
-                            self.csn_input.set_clear_label()
-                            self.csn_input.enable_btns()
+                        self.csn_input.set_clear_label()
+                        self.csn_input.enable_btns()
+                        self.cpallet.set_pallet_chosen(input_text)
+
+                        if empty_places > 0:  # Места ещё есть
 
                             if self.set_pallet_completed_status(input_text, False) is False:
                                 print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
@@ -430,15 +431,16 @@ class MainWindow(QMainWindow):
                         else:  # Мест нет
                             self.cpallet_label.set_error(2, "red", "Внимание!")
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                             text=f"В паллете '{input_text}' больше нет места. Выбор паллета сброшен!!!\n\n"
-                                                  f"Вы можете изменить конфиг, добавив дополнительные места.",
+                                             text=f"В паллете '{input_text}' больше нет места.\n\n"
+                                                  f"Вы можете изменить конфиг, добавив дополнительные места, или "
+                                                  f"закрыть паллет, нажав на кнопку 'Завершить паллет'.",
                                              title="Внимание!",
                                              variant_yes="Закрыть", variant_no="", callback=None)
-                            self.csn_input.set_clear_label()
-
-                            # сбрасываем бокс
-                            self.clear_current_pallet()
-                            return False
+                            # self.csn_input.set_clear_label()
+                            #
+                            # # сбрасываем бокс
+                            # self.clear_current_pallet()
+                            return True
 
                 else:
                     self.cpallet_label.set_error(2, "red", "Внимание!")
@@ -608,24 +610,29 @@ class MainWindow(QMainWindow):
             # это заведомо неверно так как паллет задумывалось закрывать вручную без технолога,
             # но Саша попросил что бы технолог контролировал!
             # Поэтому только автозакрытие!
-            self.cpallet_label.set_error(2, "yellow", "Внимание!")
-            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                             text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
-                                   f"Паллет ещё не заполнен!\n\n"
-                                   f"Для принудительного закрытия позовите технолога, для "
-                                   f"изменения количества устройств в файле конфигурации."),
-                             title="Внимание!",
-                             variant_yes="Закрыть", variant_no="",
-                             callback=None)
 
+            # То что Саша насоветовал
             # self.cpallet_label.set_error(2, "yellow", "Внимание!")
             # send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
             #                  text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
-            #                        f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
-            #                        f"Статус для паллета будет установлен на 'Сформирован'."),
+            #                        f"Паллет ещё не заполнен!\n\n"
+            #                        f"Для принудительного закрытия позовите технолога, для "
+            #                        f"изменения количества устройств в файле конфигурации."),
             #                  title="Внимание!",
-            #                  variant_yes="Да", variant_no="Нет",
-            #                  callback=self.on_user_clicked_variant_btn_pallette_complete)
+            #                  variant_yes="Закрыть", variant_no="",
+            #                  callback=None)
+
+            # Мой изначальный код:
+
+            self.cpallet_label.set_error(2, "yellow", "Внимание!")
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                             text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
+                                   f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
+                                   f"Статус для паллета будет установлен на 'Сформирован'."),
+                             title="Внимание!",
+                             variant_yes="Да", variant_no="Нет",
+                             callback=self.on_user_clicked_variant_btn_pallette_complete)
+
         elif variant == "cancel":
             self.cpallet_label.set_error(2, "yellow", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
@@ -641,6 +648,8 @@ class MainWindow(QMainWindow):
         if val.text() == "Да":
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
+
+            self.cpallet_label.set_error(2, "yellow", "Паллет отменён!")
         else:
             pass
 
@@ -655,6 +664,9 @@ class MainWindow(QMainWindow):
 
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
+            self.cpallet_label.set_error(3, "green", "Паллет сформирован!")
+
+
         else:
             pass
 
