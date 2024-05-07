@@ -14,6 +14,14 @@ class CControlPanel:
     def set_clear_last_place(self):
         self.interface.label_last_places.setText(f"Осталось мест: - штук")
 
+    def set_pallet_status(self, status: bool):
+        if status is True:
+            self.interface.label_last_places.setText("Статус паллета: сформирован!")
+            self.interface.label_last_places.setStyleSheet(u"color: green")
+        else:
+            self.interface.label_last_places.setText("Статус паллета: не сформирован!")
+            self.interface.label_last_places.setStyleSheet(u"color: red")
+
     def set_last_places(self, places: int):
         self.interface.label_last_places.setText(f"Осталось мест: {places} штук")
 

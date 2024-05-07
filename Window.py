@@ -256,6 +256,20 @@ class MainWindow(QMainWindow):
 
                                         self.csn_input.set_clear_label()
                                         return
+
+                                    line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
+                                    if line_fk != self.assembled_line:
+                                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                         text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
+                                                              f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
+                                                              f"Позовите технолога!",
+                                                         title="Внимание!",
+                                                         variant_yes="Закрыть", variant_no="", callback=None)
+
+                                        self.csn_input.set_clear_label()
+                                        return
+
                                     tv_fk = result.get(SQL_TABLE_TV_CONFIG.fd_tv_id, None)
                                 else:
                                     self.cpallet_label.set_error(2, "red", "Внимание!")
@@ -519,6 +533,7 @@ class MainWindow(QMainWindow):
                     success_load = True
 
             if success_load is True:
+                pallet_status = self.get_pallete_status(input_text)
                 self.cpallet.set_pallet_chosen(input_text)
 
                 if isinstance(result_open, int):
@@ -526,7 +541,7 @@ class MainWindow(QMainWindow):
                 else:
                     self.ccontrol_box.set_count_in_pallet(0)
 
-                # self.ccontrol_box.set_clear_last_place()
+                self.ccontrol_box.set_pallet_status(pallet_status)
 
                 self.cpallet_label.set_name(input_text)
                 self.csn_input.set_clear_label()
@@ -602,6 +617,30 @@ class MainWindow(QMainWindow):
                 "Во время получения данных списка устройств на паллете возникла ошибка.\n"
                 "Обратитесь к системному администратору!\n\n"
                 "Код ошибки: 'load_sns_in_pallet -> get_sn_data'")
+        finally:
+            csql.disconnect_from_db()
+
+        return False
+
+    def get_pallete_status(self, pallette_code: str) -> bool:
+        """
+        Сформирован или нет
+        :param pallette_code:
+        :return:
+        """
+
+        csql = CSQLQuerys()
+        try:
+            result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+            if result_connect is True:
+                status = csql.is_pallette_completed(pallette_code)
+                if status is True:
+                    return True
+        except:
+            self.send_error_message(
+                "Во время получения статуса паллета возникла ошибка.\n"
+                "Обратитесь к системному администратору!\n\n"
+                "Код ошибки: 'pallet_info -> get_pallete_status'")
         finally:
             csql.disconnect_from_db()
 

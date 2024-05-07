@@ -28,6 +28,7 @@ class SQL_TABLE_ASSEMBLED_TV:  # Таблица собранных телеви�
     fd_tv_fk = "tv_fk"
     fd_tv_sn = "tv_sn"  # Линия вторичный ключ
 
+    fd_line_fk = "line_fk"
     fd_first_scan_time = "timestamp_st10"  # Время сканировки первичной
     fd_completed_scan_time = "timestamp_st100"  # Дата прохождения черезе упаковку
     fd_sn_scan_time = "timestamp_st60"  # Дата прохождения черезе присвоение sn

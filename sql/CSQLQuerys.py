@@ -18,7 +18,6 @@ class CSQLQuerys(CSqlAgent):
         query_string = (f"SELECT {SQL_PALLET_SN.fd_assy_id} "
                         f"FROM {SQL_TABLE_NAME.tb_pallet_sn} "
                         f"WHERE {SQL_PALLET_SN.fd_pallet_code} = %s "
-                        f"ORDER BY {SQL_PALLET_SN.fd_assy_id} ASC "
                         f"LIMIT 1")  # на всякий лимит
 
         result = self.sql_query_and_get_result(
@@ -61,6 +60,27 @@ class CSQLQuerys(CSqlAgent):
 
         return result
 
+    def is_pallette_completed(self, pallet_code: str) -> bool | None:
+        """А готов ли паллет"""
+        query_string = (f"SELECT {SQL_PALLET_SN.fd_assy_id}, {SQL_PALLET_SN.fd_completed_check} "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_sn} "
+                        f"WHERE {SQL_PALLET_SN.fd_pallet_code} = %s "
+                        f"LIMIT 1")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code,), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+
+        sql_pass = result[0].get(SQL_PALLET_SN.fd_assy_id, None)
+        if sql_pass is not None:
+            sql_pass = result[0].get(SQL_PALLET_SN.fd_completed_check, None)
+            if sql_pass is not None:
+                return sql_pass
+
+        return None
+
+
     def is_pallet_have_any_sn(self, pallet_code: str):
         """Инфа о паллете"""
         query_string = (f"SELECT * "
@@ -83,6 +103,7 @@ class CSQLQuerys(CSqlAgent):
         query_string = (f"SELECT "
                         f"{SQL_TABLE_NAME.tb_tv_models}.{SQL_TABLE_TV_CONFIG.fd_tv_name},"
                         f"{SQL_TABLE_NAME.tb_tv_models}.{SQL_TABLE_TV_CONFIG.fd_tv_id}, "
+                        f"{SQL_TABLE_NAME.tb_assembled_tv}.{SQL_TABLE_ASSEMBLED_TV.fd_line_fk}, "
                         f"{SQL_TABLE_NAME.tb_assembled_tv}.{SQL_TABLE_ASSEMBLED_TV.fd_tv_sn}, "
                         f"{SQL_TABLE_NAME.tb_assembled_tv}.{SQL_TABLE_ASSEMBLED_TV.fd_sn_scan_time}, "
                         f"{SQL_TABLE_NAME.tb_assembled_tv}.{SQL_TABLE_ASSEMBLED_TV.fd_first_scan_time}, "
