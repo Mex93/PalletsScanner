@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.set_block_interface()
         QFontDatabase.addApplicationFont("designs/Iosevka Bold.ttf")
-        self.setWindowTitle(f'Сканирование паллетов TCL ООО Квант 2024 v{self.__base_program_version} '
+        self.setWindowTitle(f'Формирование паллетов TCL ООО Квант 2024 v{self.__base_program_version} '
                             f'[Режим: Создание паллет]')
 
         # self.ui.centralwidget.setEnabled(False)  # на всякий блокирнём интерфейс

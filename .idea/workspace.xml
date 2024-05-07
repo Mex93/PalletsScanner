@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="RC">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Фикс ошибок.&#10;Добавлена линия создавшая паллет">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CControlPanel.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CControlPanel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_parser/CConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/enums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/sql_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,16 +35,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Ryazanov/PycharmProjects/palletScanner",
-    "two.files.diff.last.used.folder": "C:/Users/Ryazanov/PycharmProjects/palletScanner/sql"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner&quot;,
+    &quot;two.files.diff.last.used.folder&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner/sql&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner" />
@@ -236,13 +230,22 @@
       <option name="project" value="LOCAL" />
       <updated>1714994029092</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Фикс ошибок.&#10;Добавлена линия создавшая паллет">
+      <option name="closed" value="true" />
+      <created>1715003163782</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1715003163782</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first" />
     <MESSAGE value="RC" />
-    <option name="LAST_COMMIT_MESSAGE" value="RC" />
+    <MESSAGE value="Фикс ошибок.&#10;Добавлена линия создавшая паллет" />
+    <option name="LAST_COMMIT_MESSAGE" value="Фикс ошибок.&#10;Добавлена линия создавшая паллет" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
