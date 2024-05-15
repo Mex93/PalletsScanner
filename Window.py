@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.__base_program_version = "0.2"  # Менять при каждом обновлении любой из подпрограмм
+        self.__base_program_version = "0.3"  # Менять при каждом обновлении любой из подпрограмм
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.set_block_interface()
@@ -520,41 +520,41 @@ class MainWindow(QMainWindow):
         return False
 
     def load_info_mode(self, input_text, template_pallet):
-        if self.cpallet.is_pattern_match(template_pallet, input_text):
+        # if self.cpallet.is_pattern_match(template_pallet, input_text):
 
-            # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
-            success_load = False
-            result_open = self.load_sns_in_pallet(input_text)
-            if isinstance(result_open, bool):
-                if result_open is True:
-                    success_load = True
-            elif isinstance(result_open, int):
-                if result_open > 0:
-                    success_load = True
+        # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
+        success_load = False
+        result_open = self.load_sns_in_pallet(input_text)
+        if isinstance(result_open, bool):
+            if result_open is True:
+                success_load = True
+        elif isinstance(result_open, int):
+            if result_open > 0:
+                success_load = True
 
-            if success_load is True:
-                pallet_status = self.get_pallete_status(input_text)
-                self.cpallet.set_pallet_chosen(input_text)
+        if success_load is True:
+            pallet_status = self.get_pallete_status(input_text)
+            self.cpallet.set_pallet_chosen(input_text)
 
-                if isinstance(result_open, int):
-                    self.ccontrol_box.set_count_in_pallet(result_open)
-                else:
-                    self.ccontrol_box.set_count_in_pallet(0)
+            if isinstance(result_open, int):
+                self.ccontrol_box.set_count_in_pallet(result_open)
+            else:
+                self.ccontrol_box.set_count_in_pallet(0)
 
-                self.ccontrol_box.set_pallet_status(pallet_status)
+            self.ccontrol_box.set_pallet_status(pallet_status)
 
-                self.cpallet_label.set_name(input_text)
-                self.csn_input.set_clear_label()
-                self.cpallet_label.set_error(2, "grey",
-                                             "Паллет открыт для просмотра!")
-                return True
-        else:
-            self.cpallet_label.set_error(2, "red", "Внимание!")
-            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                             text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
-                             title="Внимание!",
-                             variant_yes="Закрыть", variant_no="", callback=None)
+            self.cpallet_label.set_name(input_text)
             self.csn_input.set_clear_label()
+            self.cpallet_label.set_error(2, "grey",
+                                         "Паллет открыт для просмотра!")
+            return True
+        # else:
+        #     self.cpallet_label.set_error(2, "red", "Внимание!")
+        #     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+        #                      text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
+        #                      title="Внимание!",
+        #                      variant_yes="Закрыть", variant_no="", callback=None)
+        #     self.csn_input.set_clear_label()
 
         return False
 

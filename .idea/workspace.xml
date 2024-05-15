@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Фикс ошибок.&#10;Добавлена линия создавшая паллет">
-      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CControlPanel.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CControlPanel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/sql_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,14 +245,31 @@
       <option name="project" value="LOCAL" />
       <updated>1715064771728</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса">
+      <option name="closed" value="true" />
+      <created>1715082856851</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1715082856851</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса">
+      <option name="closed" value="true" />
+      <created>1715083279323</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1715083279323</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="first" />
     <MESSAGE value="RC" />
     <MESSAGE value="Фикс ошибок.&#10;Добавлена линия создавшая паллет" />
-    <option name="LAST_COMMIT_MESSAGE" value="Фикс ошибок.&#10;Добавлена линия создавшая паллет" />
+    <MESSAGE value="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
