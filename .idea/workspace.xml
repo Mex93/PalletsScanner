@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Отключена проверка шаблона паллета в режиме демонстрации">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common_func.py" beforeDir="false" afterPath="$PROJECT_DIR$/common_func.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715083279323</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Отключена проверка шаблона паллета в режиме демонстрации">
+      <option name="closed" value="true" />
+      <created>1715766324002</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1715766324002</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -269,7 +279,8 @@
     <MESSAGE value="RC" />
     <MESSAGE value="Фикс ошибок.&#10;Добавлена линия создавшая паллет" />
     <MESSAGE value="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса" />
+    <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации" />
+    <option name="LAST_COMMIT_MESSAGE" value="Отключена проверка шаблона паллета в режиме демонстрации" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -281,12 +292,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>143</line>
+          <line>146</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>540</line>
+          <line>564</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

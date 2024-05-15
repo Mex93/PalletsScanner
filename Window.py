@@ -3,7 +3,10 @@ from PySide6.QtGui import QFontDatabase
 
 import sys
 
-from common_func import send_message_box, SMBOX_ICON_TYPE, get_about_text, get_rules_text, get_current_unix_time
+from common_func import (send_message_box, SMBOX_ICON_TYPE,
+                         get_about_text, get_rules_text,
+                         get_current_unix_time, is_pallet_text_valid,
+                         is_tv_sn_valid)
 from ui.interface import Ui_MainWindow
 from enums import JOB_TYPE, REPEAT_TV_ERROR_TYPES
 from config_parser.CConfig import CConfig
@@ -153,350 +156,371 @@ class MainWindow(QMainWindow):
         if self.program_job_type == JOB_TYPE.MAIN:  # Привязка
             if self.cpallet.is_pallet_chosen():  # Палет выбран
                 chosen_pallet = self.cpallet.get_pallet_chosen()
-                if self.cpallet.is_pattern_match(template_tv, input_text):
-                    csql = CSQLQuerys()
-                    try:
-                        result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
-                        if result_connect is True:
-                            if csql.is_created_pallet(chosen_pallet) is False:
-                                self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
-                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                                 text=f"Указанный паллет '{chosen_pallet}' не найден!\n"
-                                                      f"Данные паллета сброшены!\n\n"
-                                                      f"Внимание! Перескинируйте все телевизоры на другой паллет!!!",
-                                                 title="Внимание!",
-                                                 variant_yes="Закрыть", variant_no="", callback=None)
-
-                                self.clear_current_pallet()
-                                return
-                    except:
-                        self.send_error_message(
-                            "Во время получения данных списка устройств на паллете возникла ошибка.\n"
-                            "Обратитесь к системному администратору!\n\n"
-                            "Код ошибки: 'on_user_input_sn_or_pallet -> is_created_pallet'")
-                        return
-                    finally:
-                        csql.disconnect_from_db()
-
-                    #  Паттерн совпал с заданным
-                    empty_places = self.cpallets_box.get_pallet_empty_places()
-                    # max_places = self.cpallets_box.get_max_places()
-
-                    if empty_places <= 0:
-                        # TODO Вход при первичном вводе паллета если он полный
-                        if self.auto_complect is True:
-                            self.cpallet_label.set_error(3, "green", "Паллет полон и автоматически закрыт!")
-                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
-                                             text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
-                                                  f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
-                                                  f"Паллет готов к отгрузке!",
-                                             title="Успех!",
-                                             variant_yes="Закрыть", variant_no="", callback=None)
-
-                            self.clear_current_pallet()
-                            # todo Паллет обнулён из за переполнения
-
-                            if self.set_pallet_completed_status(chosen_pallet, True) is False:
-                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 1")
-
-                        else:  # автокомплект отключен
-                            self.cpallet_label.set_error(2, "green", "Паллет полон и автоматически закрыт!")
-                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
-                                             text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
-                                                  f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
-                                                  f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
-                                             title="Успех!",
-                                             variant_yes="Закрыть", variant_no="", callback=None)
-                            # todo Паллет набился но не обнулён, так как авто комплект отключен
-                        return True
-
-                    # Готово todo Проверка на наличие копии в паллете
-                    # Готово todo проверка на наличие этого телика в другом паллете с теликами
-                    # Готово TODO проверка наличия созданого в assembled телека и его прохождение через станцию проверка комплектности (по дате)
-                    # Готово TODO Вставка отсканированного тв в бд
-                    # Готово Проверить само существование паллета в бд -> Сделано вверху
-
-                    if self.cpallets_box.get_place_index_from_tv_sn(
-                            input_text) == -1:  # Проверка только в текущем паллете программы
-
-                        tv_fk = None
-
+                if is_tv_sn_valid(input_text) is True:
+                    if self.cpallet.is_pattern_match(template_tv, input_text):
                         csql = CSQLQuerys()
                         try:
                             result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                             if result_connect is True:
-                                result = csql.get_pallet_id_from_tv_sn(input_text)
-                                if result is not False:
-                                    old_pallete_code = result
-
-                                    if old_pallete_code is not None:
-                                        self.cpallet_label.set_error(2, "red", "Внимание!")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                                         text=f"Указанный серийный номер '{input_text}' найден в другом паллете '{old_pallete_code}' !\n"
-                                                              f"Позовите технолога!",
-                                                         title="Внимание!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-
-                                        self.csn_input.set_clear_label()
-                                        return
-
-                                result = csql.get_tv_info(input_text)
-                                if result is not False:
-
-                                    complect_check_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_completed_scan_time,
-                                                                     None)
-                                    if complect_check_time is None:
-                                        self.cpallet_label.set_error(2, "red", "Внимание!")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                                         text=f"Указанный серийный номер '{input_text}' не прошёл "
-                                                              f"проверку комплектности на упаковке !\n"
-                                                              f"Позовите технолога!",
-                                                         title="Внимание!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-
-                                        self.csn_input.set_clear_label()
-                                        return
-
-                                    line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
-                                    if line_fk != self.assembled_line:
-                                        self.cpallet_label.set_error(2, "red", "Внимание!")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                                         text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
-                                                              f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
-                                                              f"Позовите технолога!",
-                                                         title="Внимание!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-
-                                        self.csn_input.set_clear_label()
-                                        return
-
-                                    tv_fk = result.get(SQL_TABLE_TV_CONFIG.fd_tv_id, None)
-                                else:
-                                    self.cpallet_label.set_error(2, "red", "Внимание!")
-                                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                                     text=f"Указанный серийный номер '{input_text}' не найден в числе "
-                                                          f"собранных телевизоров!\n"
-                                                          f"Позовите технолога!",
+                                if csql.is_created_pallet(chosen_pallet) is False:
+                                    self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                     text=f"Указанный паллет '{chosen_pallet}' не найден!\n"
+                                                          f"Данные паллета сброшены!\n\n"
+                                                          f"Внимание! Перескинируйте все телевизоры на другой паллет!!!",
                                                      title="Внимание!",
                                                      variant_yes="Закрыть", variant_no="", callback=None)
 
-                                    self.csn_input.set_clear_label()
+                                    self.clear_current_pallet()
                                     return
-
                         except:
                             self.send_error_message(
-                                "Во время получения данных устройства возникла ошибка.\n"
+                                "Во время получения данных списка устройств на паллете возникла ошибка.\n"
                                 "Обратитесь к системному администратору!\n\n"
-                                "Код ошибки: 'load_job_mode -> get_pallet_id_from_tv_sn'")
+                                "Код ошибки: 'on_user_input_sn_or_pallet -> is_created_pallet'")
                             return
                         finally:
                             csql.disconnect_from_db()
-                        if tv_fk is not None and self.cpallets_box.set_sn_in_pallet(input_text) is True:
-                            pallet_index = None
+
+                        #  Паттерн совпал с заданным
+                        empty_places = self.cpallets_box.get_pallet_empty_places()
+                        # max_places = self.cpallets_box.get_max_places()
+
+                        if empty_places <= 0:
+                            # TODO Вход при первичном вводе паллета если он полный
+                            if self.auto_complect is True:
+                                self.cpallet_label.set_error(3, "green", "Паллет полон и автоматически закрыт!")
+                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                                                 text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
+                                                      f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
+                                                      f"Паллет готов к отгрузке!",
+                                                 title="Успех!",
+                                                 variant_yes="Закрыть", variant_no="", callback=None)
+
+                                self.clear_current_pallet()
+                                # todo Паллет обнулён из за переполнения
+
+                                if self.set_pallet_completed_status(chosen_pallet, True) is False:
+                                    print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 1")
+
+                            else:  # автокомплект отключен
+                                self.cpallet_label.set_error(2, "green", "Паллет полон и автоматически закрыт!")
+                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                                                 text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
+                                                      f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
+                                                      f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
+                                                 title="Успех!",
+                                                 variant_yes="Закрыть", variant_no="", callback=None)
+                                # todo Паллет набился но не обнулён, так как авто комплект отключен
+                            return True
+
+                        # Готово todo Проверка на наличие копии в паллете
+                        # Готово todo проверка на наличие этого телика в другом паллете с теликами
+                        # Готово TODO проверка наличия созданого в assembled телека и его прохождение через станцию проверка комплектности (по дате)
+                        # Готово TODO Вставка отсканированного тв в бд
+                        # Готово Проверить само существование паллета в бд -> Сделано вверху
+
+                        if self.cpallets_box.get_place_index_from_tv_sn(
+                                input_text) == -1:  # Проверка только в текущем паллете программы
+
+                            tv_fk = None
 
                             csql = CSQLQuerys()
                             try:
                                 result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                                 if result_connect is True:
-                                    result = csql.insert_scanned_tv_on_pallet(chosen_pallet, input_text, tv_fk)
+                                    result = csql.get_pallet_id_from_tv_sn(input_text)
                                     if result is not False:
-                                        pallet_index = result
+                                        old_pallete_code = result
+
+                                        if old_pallete_code is not None:
+                                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                             text=f"Указанный серийный номер '{input_text}' найден в другом паллете '{old_pallete_code}' !\n"
+                                                                  f"Позовите технолога!",
+                                                             title="Внимание!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+
+                                            self.csn_input.set_clear_label()
+                                            return
+
+                                    result = csql.get_tv_info(input_text)
+                                    if result is not False:
+
+                                        complect_check_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_completed_scan_time,
+                                                                         None)
+                                        if complect_check_time is None:
+                                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                             text=f"Указанный серийный номер '{input_text}' не прошёл "
+                                                                  f"проверку комплектности на упаковке !\n"
+                                                                  f"Позовите технолога!",
+                                                             title="Внимание!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+
+                                            self.csn_input.set_clear_label()
+                                            return
+
+                                        line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
+                                        if line_fk != self.assembled_line:
+                                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                             text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
+                                                                  f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
+                                                                  f"Позовите технолога!",
+                                                             title="Внимание!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+
+                                            self.csn_input.set_clear_label()
+                                            return
+
+                                        tv_fk = result.get(SQL_TABLE_TV_CONFIG.fd_tv_id, None)
+                                    else:
+                                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                         text=f"Указанный серийный номер '{input_text}' не найден в числе "
+                                                              f"собранных телевизоров!\n"
+                                                              f"Позовите технолога!",
+                                                         title="Внимание!",
+                                                         variant_yes="Закрыть", variant_no="", callback=None)
+
+                                        self.csn_input.set_clear_label()
+                                        return
+
                             except:
                                 self.send_error_message(
-                                    "Во время создания паллета в БД возникла ошибка.\n"
+                                    "Во время получения данных устройства возникла ошибка.\n"
                                     "Обратитесь к системному администратору!\n\n"
-                                    "Код ошибки: 'load_job_mode -> insert_scanned_tv_on_pallet'")
+                                    "Код ошибки: 'load_job_mode -> get_pallet_id_from_tv_sn'")
                                 return
                             finally:
                                 csql.disconnect_from_db()
+                            if tv_fk is not None and self.cpallets_box.set_sn_in_pallet(input_text) is True:
+                                pallet_index = None
 
-                            if isinstance(pallet_index, int):
-                                empty_places -= 1
-                                self.ccontrol_box.set_last_places(empty_places)
-                                self.csn_input.set_clear_label()
-
-                                CExcelLog.print_log(chosen_pallet, input_text, tv_fk, self.assembled_line)
-
-                                # todo SN заведён
-
-                                if empty_places <= 0:
-                                    # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
-                                    if self.auto_complect is True:
-                                        self.cpallet_label.set_error(3, "green", "Паллет сформирован и автозакрыт.")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
-                                                         text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
-                                                              f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
-                                                              f"Паллет готов к отгрузке!",
-                                                         title="Успех!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-
-                                        if self.set_pallet_completed_status(chosen_pallet, True) is False:
-                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 2")
-
-                                        self.clear_current_pallet()
-                                        # todo Паллет обнулён из за переполнения
-                                    else:  # автокомплект отключен
-                                        self.cpallet_label.set_error(3, "green", "Паллет успешно сформирован.")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
-                                                         text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
-                                                              f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
-                                                              f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
-                                                         title="Успех!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-                                        # todo Паллет набился но не обнулён, так как авто комплект отключен
-                                else:
-                                    self.cpallet_label.set_error(2, "grey", f"Устройство добавлено на паллет!")
-                                return True
-
-                            else:
-                                self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
-                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                                 text=f"В обработчике привязки SN к паллету произошла ошибка. Паллет отвязан от SN !\n"
-                                                      f"Позовите технолога!!!",
-                                                 title="Внимание!",
-                                                 variant_yes="Закрыть", variant_no="", callback=None)
-                                self.csn_input.set_clear_label()
-
-                                # На всякий отвязка
-                                # Отвязка SQL
                                 csql = CSQLQuerys()
                                 try:
                                     result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                                     if result_connect is True:
-                                        csql.delete_tv_sn_from_pallet_scanned(chosen_pallet, input_text)
-                                        if self.set_pallet_completed_status(chosen_pallet, False, csql) is False:
-                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 3")
-
-                                except Exception as err:
-                                    print(f"Ошибка: {err}")
+                                        result = csql.insert_scanned_tv_on_pallet(chosen_pallet, input_text, tv_fk)
+                                        if result is not False:
+                                            pallet_index = result
+                                except:
+                                    self.send_error_message(
+                                        "Во время создания паллета в БД возникла ошибка.\n"
+                                        "Обратитесь к системному администратору!\n\n"
+                                        "Код ошибки: 'load_job_mode -> insert_scanned_tv_on_pallet'")
                                     return
                                 finally:
                                     csql.disconnect_from_db()
 
-                                # Отвязка в паллете
-                                sn_index = self.cpallets_box.get_place_index_from_tv_sn(input_text)
-                                if sn_index != -1:
-                                    self.cpallets_box.clear_field(sn_index)
-                                return False
-                    else:
-                        if self.repeat_tv_error_type == REPEAT_TV_ERROR_TYPES.WINDOW:
-                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                if isinstance(pallet_index, int):
+                                    empty_places -= 1
+                                    self.ccontrol_box.set_last_places(empty_places)
+                                    self.csn_input.set_clear_label()
 
-                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                             text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
-                                                  f"номером '{input_text}' !",
-                                             title="Внимание!",
-                                             variant_yes="Закрыть", variant_no="", callback=None)
-                            self.csn_input.set_clear_label()
+                                    CExcelLog.print_log(chosen_pallet, input_text, tv_fk, self.assembled_line)
+
+                                    # todo SN заведён
+
+                                    if empty_places <= 0:
+                                        # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
+                                        if self.auto_complect is True:
+                                            self.cpallet_label.set_error(3, "green", "Паллет сформирован и автозакрыт.")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                                                             text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
+                                                                  f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
+                                                                  f"Паллет готов к отгрузке!",
+                                                             title="Успех!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+
+                                            if self.set_pallet_completed_status(chosen_pallet, True) is False:
+                                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 2")
+
+                                            self.clear_current_pallet()
+                                            # todo Паллет обнулён из за переполнения
+                                        else:  # автокомплект отключен
+                                            self.cpallet_label.set_error(3, "green", "Паллет успешно сформирован.")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                                                             text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
+                                                                  f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
+                                                                  f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
+                                                             title="Успех!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+                                            # todo Паллет набился но не обнулён, так как авто комплект отключен
+                                    else:
+                                        self.cpallet_label.set_error(2, "grey", f"Устройство добавлено на паллет!")
+                                    return True
+
+                                else:
+                                    self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                     text=f"В обработчике привязки SN к паллету произошла ошибка. Паллет отвязан от SN !\n"
+                                                          f"Позовите технолога!!!",
+                                                     title="Внимание!",
+                                                     variant_yes="Закрыть", variant_no="", callback=None)
+                                    self.csn_input.set_clear_label()
+
+                                    # На всякий отвязка
+                                    # Отвязка SQL
+                                    csql = CSQLQuerys()
+                                    try:
+                                        result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+                                        if result_connect is True:
+                                            csql.delete_tv_sn_from_pallet_scanned(chosen_pallet, input_text)
+                                            if self.set_pallet_completed_status(chosen_pallet, False, csql) is False:
+                                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 3")
+
+                                    except Exception as err:
+                                        print(f"Ошибка: {err}")
+                                        return
+                                    finally:
+                                        csql.disconnect_from_db()
+
+                                    # Отвязка в паллете
+                                    sn_index = self.cpallets_box.get_place_index_from_tv_sn(input_text)
+                                    if sn_index != -1:
+                                        self.cpallets_box.clear_field(sn_index)
+                                    return False
                         else:
-                            self.cpallet_label.set_error(3, "yellow", f"Повтор SN: '{input_text}'")
-                            self.csn_input.set_clear_label()
+                            if self.repeat_tv_error_type == REPEAT_TV_ERROR_TYPES.WINDOW:
+                                self.cpallet_label.set_error(2, "red", "Внимание!")
 
+                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                 text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
+                                                      f"номером '{input_text}' !",
+                                                 title="Внимание!",
+                                                 variant_yes="Закрыть", variant_no="", callback=None)
+                                self.csn_input.set_clear_label()
+                            else:
+                                self.cpallet_label.set_error(3, "yellow", f"Повтор SN: '{input_text}'")
+                                self.csn_input.set_clear_label()
+
+                            return
+
+                    else:
+                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                         text=f"Шаблон серийного номера телевизора не совпал с указанным серийным номером! '{template_tv}' -> | '{input_text}'",
+                                         title="Внимание!",
+                                         variant_yes="Закрыть", variant_no="", callback=None)
+                        self.csn_input.set_clear_label()
                         return
-
                 else:
                     self.cpallet_label.set_error(2, "red", "Внимание!")
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                     text=f"Шаблон серийного номера телевизора не совпал с указанным серийным номером! '{template_tv}' -> | '{input_text}'",
+                                     text=f"Ошибка ввода SN устройства!\n"
+                                          f"Допускается вводить только цифры и буквы латинского алфавита.",
                                      title="Внимание!",
                                      variant_yes="Закрыть", variant_no="", callback=None)
                     self.csn_input.set_clear_label()
                     return
+
             else:  # Если паллет не выбран то
 
-                if self.cpallet.is_pattern_match(template_pallet, input_text):
+                if is_pallet_text_valid(input_text) is True:
+                    if self.cpallet.is_pattern_match(template_pallet, input_text):
 
-                    success_load = False
-                    csql = CSQLQuerys()
-                    try:
-                        # Проверяем паллет на наличие
-                        # Если палет есть то просто грузим всё что в нём
-                        # Если паллета нет то создаём и переходим в набивание
-                        result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
-                        if result_connect is True:
-                            if csql.is_created_pallet(input_text) is True:
+                        success_load = False
+                        csql = CSQLQuerys()
+                        try:
+                            # Проверяем паллет на наличие
+                            # Если палет есть то просто грузим всё что в нём
+                            # Если паллета нет то создаём и переходим в набивание
+                            result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+                            if result_connect is True:
+                                if csql.is_created_pallet(input_text) is True:
 
-                                result_open = self.load_sns_in_pallet(input_text)
-                                if isinstance(result_open, bool):
-                                    if result_open is True:
-                                        success_load = True
-                                elif isinstance(result_open, int):
-                                    if result_open > 0:
-                                        success_load = True
+                                    result_open = self.load_sns_in_pallet(input_text)
+                                    if isinstance(result_open, bool):
+                                        if result_open is True:
+                                            success_load = True
+                                    elif isinstance(result_open, int):
+                                        if result_open > 0:
+                                            success_load = True
 
-                                if success_load is True:
-                                    self.cpallet_label.set_error(2, "blue1", "Паллет открыт!")
+                                    if success_load is True:
+                                        self.cpallet_label.set_error(2, "blue1", "Паллет открыт!")
 
-                            else:  # если паллета нет - создаём
+                                else:  # если паллета нет - создаём
 
-                                if csql.create_new_pallet(input_text, self.assembled_line) is not False:
-                                    if csql.is_pallet_have_any_sn(input_text) is False:
-                                        success_load = True
-                                        self.cpallet_label.set_error(2, "blue2", "Паллет успешно создан!")
-                                    else:
-                                        self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
-                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                                         text=f"В новом паллете '{input_text}' обнаружены телевизоры "
-                                                              f"!!!\n\n"
-                                                              f"Так быть не должно! Позовите технолога!!!",
-                                                         title="Внимание!",
-                                                         variant_yes="Закрыть", variant_no="", callback=None)
-                                        self.csn_input.set_clear_label()
+                                    if csql.create_new_pallet(input_text, self.assembled_line) is not False:
+                                        if csql.is_pallet_have_any_sn(input_text) is False:
+                                            success_load = True
+                                            self.cpallet_label.set_error(2, "blue2", "Паллет успешно создан!")
+                                        else:
+                                            self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                             text=f"В новом паллете '{input_text}' обнаружены телевизоры "
+                                                                  f"!!!\n\n"
+                                                                  f"Так быть не должно! Позовите технолога!!!",
+                                                             title="Внимание!",
+                                                             variant_yes="Закрыть", variant_no="", callback=None)
+                                            self.csn_input.set_clear_label()
 
-                                        # сбрасываем бокс
-                                        self.clear_current_pallet()
-                                        return False
+                                            # сбрасываем бокс
+                                            self.clear_current_pallet()
+                                            return False
 
-                    except Exception as err:
-                        self.send_error_message(
-                            "Во время получения данных списка устройств на паллете возникла ошибка.\n"
-                            "Обратитесь к системному администратору!\n\n"
-                            "Код ошибки: 'on_user_input_sn_or_pallet -> get_info_data'")
-                        print(f"Ошибка: {err}")
-                        return
-                    finally:
-                        csql.disconnect_from_db()
+                        except Exception as err:
+                            self.send_error_message(
+                                "Во время получения данных списка устройств на паллете возникла ошибка.\n"
+                                "Обратитесь к системному администратору!\n\n"
+                                "Код ошибки: 'on_user_input_sn_or_pallet -> get_info_data'")
+                            print(f"Ошибка: {err}")
+                            return
+                        finally:
+                            csql.disconnect_from_db()
 
-                    if success_load is True:
-                        empty_places = self.cpallets_box.get_pallet_empty_places()
+                        if success_load is True:
+                            empty_places = self.cpallets_box.get_pallet_empty_places()
 
-                        max_places = self.cpallets_box.get_max_places()
-                        self.ccontrol_box.set_max_places(max_places)
-                        self.ccontrol_box.set_last_places(empty_places)
-                        self.cpallet_label.set_name(input_text)
+                            max_places = self.cpallets_box.get_max_places()
+                            self.ccontrol_box.set_max_places(max_places)
+                            self.ccontrol_box.set_last_places(empty_places)
+                            self.cpallet_label.set_name(input_text)
 
+                            self.csn_input.set_clear_label()
+                            self.csn_input.enable_btns()
+                            self.cpallet.set_pallet_chosen(input_text)
+
+                            if empty_places > 0:  # Места ещё есть
+
+                                if self.set_pallet_completed_status(input_text, False) is False:
+                                    print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
+
+                                # todo Паллет заведён
+                                return True
+                            else:  # Мест нет
+                                self.cpallet_label.set_error(2, "red", "Внимание!")
+                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                                 text=f"В паллете '{input_text}' больше нет места.\n\n"
+                                                      f"Вы можете изменить конфиг, добавив дополнительные места, или "
+                                                      f"закрыть паллет, нажав на кнопку 'Завершить паллет'.",
+                                                 title="Внимание!",
+                                                 variant_yes="Закрыть", variant_no="", callback=None)
+                                # self.csn_input.set_clear_label()
+                                #
+                                # # сбрасываем бокс
+                                # self.clear_current_pallet()
+                                return True
+
+                    else:
+                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                         text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
+                                         title="Внимание!",
+                                         variant_yes="Закрыть", variant_no="", callback=None)
                         self.csn_input.set_clear_label()
-                        self.csn_input.enable_btns()
-                        self.cpallet.set_pallet_chosen(input_text)
-
-                        if empty_places > 0:  # Места ещё есть
-
-                            if self.set_pallet_completed_status(input_text, False) is False:
-                                print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
-
-                            # todo Паллет заведён
-                            return True
-                        else:  # Мест нет
-                            self.cpallet_label.set_error(2, "red", "Внимание!")
-                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                             text=f"В паллете '{input_text}' больше нет места.\n\n"
-                                                  f"Вы можете изменить конфиг, добавив дополнительные места, или "
-                                                  f"закрыть паллет, нажав на кнопку 'Завершить паллет'.",
-                                             title="Внимание!",
-                                             variant_yes="Закрыть", variant_no="", callback=None)
-                            # self.csn_input.set_clear_label()
-                            #
-                            # # сбрасываем бокс
-                            # self.clear_current_pallet()
-                            return True
-
                 else:
                     self.cpallet_label.set_error(2, "red", "Внимание!")
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                     text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
+                                     text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
+                                          f"Длина SN номера паллета должна быть от 9 до 20 символов.",
                                      title="Внимание!",
                                      variant_yes="Закрыть", variant_no="", callback=None)
                     self.csn_input.set_clear_label()
+
         return False
 
     def set_pallet_completed_status(self, pallette_code: str, variant: bool, sql_handle: any = False):
@@ -521,33 +545,41 @@ class MainWindow(QMainWindow):
 
     def load_info_mode(self, input_text, template_pallet):
         # if self.cpallet.is_pattern_match(template_pallet, input_text):
+        if is_pallet_text_valid(input_text) is True:
+            # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
+            success_load = False
+            result_open = self.load_sns_in_pallet(input_text)
+            if isinstance(result_open, bool):
+                if result_open is True:
+                    success_load = True
+            elif isinstance(result_open, int):
+                if result_open > 0:
+                    success_load = True
 
-        # if self.cpallet.get_pallet_chosen() != input_text: вдруг переобновить надо
-        success_load = False
-        result_open = self.load_sns_in_pallet(input_text)
-        if isinstance(result_open, bool):
-            if result_open is True:
-                success_load = True
-        elif isinstance(result_open, int):
-            if result_open > 0:
-                success_load = True
+            if success_load is True:
+                pallet_status = self.get_pallete_status(input_text)
+                self.cpallet.set_pallet_chosen(input_text)
 
-        if success_load is True:
-            pallet_status = self.get_pallete_status(input_text)
-            self.cpallet.set_pallet_chosen(input_text)
+                if isinstance(result_open, int):
+                    self.ccontrol_box.set_count_in_pallet(result_open)
+                else:
+                    self.ccontrol_box.set_count_in_pallet(0)
 
-            if isinstance(result_open, int):
-                self.ccontrol_box.set_count_in_pallet(result_open)
-            else:
-                self.ccontrol_box.set_count_in_pallet(0)
+                self.ccontrol_box.set_pallet_status(pallet_status)
 
-            self.ccontrol_box.set_pallet_status(pallet_status)
-
-            self.cpallet_label.set_name(input_text)
+                self.cpallet_label.set_name(input_text)
+                self.csn_input.set_clear_label()
+                self.cpallet_label.set_error(2, "grey",
+                                             "Паллет открыт для просмотра!")
+                return True
+        else:
+            self.cpallet_label.set_error(2, "red", "Внимание!")
+            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                             text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
+                                  f"Длина SN номера паллета должна быть от 9 до 20 символов!",
+                             title="Внимание!",
+                             variant_yes="Закрыть", variant_no="", callback=None)
             self.csn_input.set_clear_label()
-            self.cpallet_label.set_error(2, "grey",
-                                         "Паллет открыт для просмотра!")
-            return True
         # else:
         #     self.cpallet_label.set_error(2, "red", "Внимание!")
         #     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,

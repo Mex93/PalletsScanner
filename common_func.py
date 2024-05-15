@@ -1,8 +1,10 @@
 from datetime import datetime
+import re
 from PySide6.QtWidgets import QMessageBox
 from PySide6 import QtWidgets
 from PySide6.QtGui import QIcon, QFont
 from PySide6.QtCore import QSize
+
 from enums import SMBOX_ICON_TYPE
 
 INFO_CURRENT_ADMIN_EMAIL = "ryazanov.n@tvkvant.ru"
@@ -99,3 +101,21 @@ def convert_date_from_sql_format(date: str):
     if string is False:
         string = ""
     return string
+
+
+def is_pallet_text_valid(text: str) -> bool:
+    clen = len(text)
+    if clen < 9 or clen >= 20:
+        return False
+
+    if re.search(r'[^A-Z0-9]', text):
+        return False
+
+    return True
+
+
+def is_tv_sn_valid(text: str) -> bool:
+    if re.search(r'[^A-Z0-9]', text):
+        return False
+
+    return True
