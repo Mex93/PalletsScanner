@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.__base_program_version = "0.3"  # Менять при каждом обновлении любой из подпрограмм
+        self.__base_program_version = "0.4"  # Менять при каждом обновлении
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.set_block_interface()
@@ -115,8 +115,9 @@ class MainWindow(QMainWindow):
 
         # Если инфо мод то глушим ненужное
         if program_job_type == JOB_TYPE.INFO:
-            self.setWindowTitle(f'Формирование паллетов готовой продукции ООО Квант 2024 v{self.__base_program_version} '
-                                f'[Режим: Демонстрация укомплектованности паллет]')
+            self.setWindowTitle(
+                f'Формирование паллетов готовой продукции ООО Квант 2024 v{self.__base_program_version} '
+                f'[Режим: Демонстрация укомплектованности паллет]')
 
             self.ccontrol_box.disable_place_info()
             # self.ccontrol_box.set_last_places(0)
@@ -127,9 +128,178 @@ class MainWindow(QMainWindow):
 
         self.ui.pushButton_info.clicked.connect(lambda: self.on_user_pressed_info_btn())
 
+        self.ui.pushButton_field_0.clicked.connect(lambda: self.on_clicked_on_pallet(0))
+        self.ui.pushButton_field_1.clicked.connect(lambda: self.on_clicked_on_pallet(1))
+        self.ui.pushButton_field_2.clicked.connect(lambda: self.on_clicked_on_pallet(2))
+        self.ui.pushButton_field_3.clicked.connect(lambda: self.on_clicked_on_pallet(3))
+        self.ui.pushButton_field_4.clicked.connect(lambda: self.on_clicked_on_pallet(4))
+        self.ui.pushButton_field_5.clicked.connect(lambda: self.on_clicked_on_pallet(5))
+        self.ui.pushButton_field_6.clicked.connect(lambda: self.on_clicked_on_pallet(6))
+        self.ui.pushButton_field_7.clicked.connect(lambda: self.on_clicked_on_pallet(7))
+        self.ui.pushButton_field_8.clicked.connect(lambda: self.on_clicked_on_pallet(8))
+        self.ui.pushButton_field_9.clicked.connect(lambda: self.on_clicked_on_pallet(9))
+        self.ui.pushButton_field_10.clicked.connect(lambda: self.on_clicked_on_pallet(10))
+        self.ui.pushButton_field_11.clicked.connect(lambda: self.on_clicked_on_pallet(11))
+        self.ui.pushButton_field_12.clicked.connect(lambda: self.on_clicked_on_pallet(12))
+        self.ui.pushButton_field_13.clicked.connect(lambda: self.on_clicked_on_pallet(13))
+        self.ui.pushButton_field_14.clicked.connect(lambda: self.on_clicked_on_pallet(14))
+        self.ui.pushButton_field_15.clicked.connect(lambda: self.on_clicked_on_pallet(15))
+        self.ui.pushButton_field_16.clicked.connect(lambda: self.on_clicked_on_pallet(16))
+        self.ui.pushButton_field_17.clicked.connect(lambda: self.on_clicked_on_pallet(17))
+        self.ui.pushButton_field_18.clicked.connect(lambda: self.on_clicked_on_pallet(18))
+        self.ui.pushButton_field_19.clicked.connect(lambda: self.on_clicked_on_pallet(19))
+        self.ui.pushButton_field_20.clicked.connect(lambda: self.on_clicked_on_pallet(20))
+        self.ui.pushButton_field_21.clicked.connect(lambda: self.on_clicked_on_pallet(21))
+        self.ui.pushButton_field_22.clicked.connect(lambda: self.on_clicked_on_pallet(22))
+        self.ui.pushButton_field_23.clicked.connect(lambda: self.on_clicked_on_pallet(23))
+        self.ui.pushButton_field_24.clicked.connect(lambda: self.on_clicked_on_pallet(24))
+        self.ui.pushButton_field_25.clicked.connect(lambda: self.on_clicked_on_pallet(25))
+        self.ui.pushButton_field_26.clicked.connect(lambda: self.on_clicked_on_pallet(26))
+        self.ui.pushButton_field_27.clicked.connect(lambda: self.on_clicked_on_pallet(27))
+        self.ui.pushButton_field_28.clicked.connect(lambda: self.on_clicked_on_pallet(28))
+        self.ui.pushButton_field_29.clicked.connect(lambda: self.on_clicked_on_pallet(29))
+        self.ui.pushButton_field_30.clicked.connect(lambda: self.on_clicked_on_pallet(30))
+        self.ui.pushButton_field_31.clicked.connect(lambda: self.on_clicked_on_pallet(31))
+        self.ui.pushButton_field_32.clicked.connect(lambda: self.on_clicked_on_pallet(32))
+        self.ui.pushButton_field_33.clicked.connect(lambda: self.on_clicked_on_pallet(33))
+        self.ui.pushButton_field_34.clicked.connect(lambda: self.on_clicked_on_pallet(34))
+        self.ui.pushButton_field_35.clicked.connect(lambda: self.on_clicked_on_pallet(35))
+        self.ui.pushButton_field_36.clicked.connect(lambda: self.on_clicked_on_pallet(36))
+        self.ui.pushButton_field_37.clicked.connect(lambda: self.on_clicked_on_pallet(37))
+        self.ui.pushButton_field_38.clicked.connect(lambda: self.on_clicked_on_pallet(38))
+        self.ui.pushButton_field_39.clicked.connect(lambda: self.on_clicked_on_pallet(39))
+        self.ui.pushButton_field_40.clicked.connect(lambda: self.on_clicked_on_pallet(40))
+        self.ui.pushButton_field_41.clicked.connect(lambda: self.on_clicked_on_pallet(41))
+        self.ui.pushButton_field_42.clicked.connect(lambda: self.on_clicked_on_pallet(42))
+        self.ui.pushButton_field_43.clicked.connect(lambda: self.on_clicked_on_pallet(43))
+        self.ui.pushButton_field_44.clicked.connect(lambda: self.on_clicked_on_pallet(44))
+        self.ui.pushButton_field_45.clicked.connect(lambda: self.on_clicked_on_pallet(45))
+        self.ui.pushButton_field_46.clicked.connect(lambda: self.on_clicked_on_pallet(46))
+        self.ui.pushButton_field_47.clicked.connect(lambda: self.on_clicked_on_pallet(47))
+        self.ui.pushButton_field_48.clicked.connect(lambda: self.on_clicked_on_pallet(48))
+        self.ui.pushButton_field_49.clicked.connect(lambda: self.on_clicked_on_pallet(49))
+        self.ui.pushButton_field_50.clicked.connect(lambda: self.on_clicked_on_pallet(50))
+        self.ui.pushButton_field_51.clicked.connect(lambda: self.on_clicked_on_pallet(51))
+        self.ui.pushButton_field_52.clicked.connect(lambda: self.on_clicked_on_pallet(52))
+        self.ui.pushButton_field_53.clicked.connect(lambda: self.on_clicked_on_pallet(53))
+        self.ui.pushButton_field_54.clicked.connect(lambda: self.on_clicked_on_pallet(54))
+        self.ui.pushButton_field_55.clicked.connect(lambda: self.on_clicked_on_pallet(55))
+        self.ui.pushButton_field_56.clicked.connect(lambda: self.on_clicked_on_pallet(56))
+        self.ui.pushButton_field_57.clicked.connect(lambda: self.on_clicked_on_pallet(57))
+        self.ui.pushButton_field_58.clicked.connect(lambda: self.on_clicked_on_pallet(58))
+        self.ui.pushButton_field_59.clicked.connect(lambda: self.on_clicked_on_pallet(59))
+
         self.ui.le_main.returnPressed.connect(lambda: self.on_user_input_sn_or_pallet())
+        self.bridge_del_tv_sn = None
+        self.bridge_del_pindex = None
+        self.bridge_del_old_pallet = None
+
+        # self.ui.labeL_in_pall_0.dragEnterEvent(self.click_on_pallet)
         self.set_unblock_interface()
+
+        self.click_time = 0
+        self.click_count = 0
+        self.click_pindex = 0
         del self.cconfig
+
+    def on_clicked_on_pallet(self, pallet_index: int):
+        if self.program_job_type == JOB_TYPE.MAIN:  # Привязка
+            if self.cpallet.is_pallet_chosen():  # Палет выбран
+                # todo запилить проверку на время для удаления телека с паллета
+                # что бы время было не более 4 часов с момента добавления на паллет
+
+                def clear_time():
+                    self.click_time = 0
+                    self.click_count = 0
+                    self.click_pindex = 0
+
+                tunix = get_current_unix_time()
+                if self.click_time < tunix:
+                    clear_time()
+                    self.click_time = tunix + 2
+                    self.click_pindex = pallet_index
+
+                if self.click_time > tunix:
+                    if self.click_pindex == pallet_index:
+                        self.click_count += 1
+                        if self.click_count == 5:
+                            clear_time()
+                            pass
+                        else:
+                            return
+                    else:
+                        clear_time()
+                        return
+                else:
+                    clear_time()
+                    return
+
+                max_places = self.cpallets_box.get_max_places()
+                if 0 <= pallet_index <= max_places:
+                    tv_sn = self.cpallets_box.get_tv_sn_from_pallete_index(pallet_index)
+                    if tv_sn is not None:
+                        chosen_pallet = self.cpallet.get_pallet_chosen()
+
+                        self.bridge_del_tv_sn = tv_sn
+                        self.bridge_del_pindex = pallet_index
+                        self.bridge_del_old_pallet = chosen_pallet
+
+                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
+                                         text=f"Вы хотите исключить '{tv_sn}' из паллета '{chosen_pallet}' ?\n\n"
+                                              f"Устройство будет исключено из паллета, а статус готовности паллета изменён на 'Не готов к отгрузке'!",
+                                         title="Внимание!",
+                                         variant_yes="Да", variant_no="Отмена", callback=self.i_im_grut)
+
+    def i_im_grut(self, val):
+        """ Удаление паллета"""
+        if val.text() == "Да":
+            success = False
+            if self.cpallet.is_pallet_chosen():  # Палет выбран
+                chosen_pallet = self.cpallet.get_pallet_chosen()
+                if chosen_pallet == self.bridge_del_old_pallet:
+                    pallet_index = self.bridge_del_pindex
+                    tv_sn = self.cpallets_box.get_tv_sn_from_pallete_index(pallet_index)
+                    if tv_sn is not None and self.bridge_del_tv_sn == tv_sn:
+
+                        csql = CSQLQuerys()
+                        try:
+                            result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+                            if result_connect is True:
+                                if csql.is_created_pallet(chosen_pallet) is True:
+
+                                    csql.delete_tv_on_pallet(tv_sn, chosen_pallet)
+                                    csql.set_completed_status(chosen_pallet, False)
+
+                                    # удаление
+                                    self.cpallets_box.clear_field(pallet_index)
+
+                                    empty_places = self.cpallets_box.get_pallet_empty_places()
+                                    self.ccontrol_box.set_last_places(empty_places)
+
+                                    self.bridge_del_tv_sn = None
+                                    self.bridge_del_pindex = None
+                                    self.bridge_del_old_pallet = None
+
+                                    CExcelLog.print_log(chosen_pallet, f"Удалён SN: '{tv_sn}'", -1, self.assembled_line)
+                                    self.cpallet_label.set_error(4, "red", "Устройство удалено с паллета!")
+                                    success = True
+                        except:
+                            self.send_error_message(
+                                "Во время получения данных списка устройств на паллете возникла ошибка.\n"
+                                "Обратитесь к системному администратору!\n\n"
+                                "Код ошибки: 'on_user_input_sn_or_pallet -> is_delete_tv'")
+                            return
+                        finally:
+                            csql.disconnect_from_db()
+
+                if not success:
+                    send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                     text=f"Не могу удалить устройство с паллета!\n\n"
+                                          f"Позовите технолога!!!",
+                                     title="Внимание!",
+                                     variant_yes="Закрыть", variant_no="", callback=None)
+
+
 
     def on_user_input_sn_or_pallet(self):
         input_text = self.csn_input.get_current_text()
@@ -483,7 +653,7 @@ class MainWindow(QMainWindow):
                             self.csn_input.set_clear_label()
                             self.csn_input.enable_btns()
                             self.cpallet.set_pallet_chosen(input_text)
-
+                            self.cpallets_box.set_unblock_frame()
                             if empty_places > 0:  # Места ещё есть
 
                                 if self.set_pallet_completed_status(input_text, False) is False:
@@ -762,8 +932,9 @@ class MainWindow(QMainWindow):
 
                 self.cpallet_label.set_error(2, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                 text=(f"Вы не можете завершить паллет '{pallette_code}', так как не все устройства отсканированы.\n\n"
-                                       f"Позовите технолога для завершения паллета с текущим количеством устройств."),
+                                 text=(
+                                     f"Вы не можете завершить паллет '{pallette_code}', так как не все устройства отсканированы.\n\n"
+                                     f"Позовите технолога для завершения паллета с текущим количеством устройств."),
                                  title="Внимание!",
                                  variant_yes="Закрыть", variant_no="",
                                  callback=None)
@@ -832,6 +1003,7 @@ class MainWindow(QMainWindow):
         self.cpallet.set_pallet_chosen("")
         self.csn_input.set_clear_label()
         self.cpallets_box.clear_box()
+        self.cpallets_box.set_block_frame()
 
     def set_block_interface(self):
         self.ui.centralwidget.setDisabled(True)

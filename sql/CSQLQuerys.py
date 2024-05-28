@@ -98,6 +98,19 @@ class CSQLQuerys(CSqlAgent):
 
         return False
 
+    def delete_tv_on_pallet(self, tv_sn: str, pallete_code: str):
+        """удалить тв с паллета"""
+        query_string = (f"DELETE "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_scanned} "
+                        f"WHERE "
+                        f"{SQL_PALLET_SCANNED.fd_fk_pallet_code} = %s AND "
+                        f"{SQL_PALLET_SCANNED.fd_tv_sn} = %s"
+                        )  # на всякий лимит
+
+        self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallete_code, tv_sn,), "_d", )  # Запрос типа аасоциативного массива
+
+
     def get_tv_info(self, tv_sn: str) -> bool | dict:
         """Инфа о телевизоре"""
         query_string = (f"SELECT "

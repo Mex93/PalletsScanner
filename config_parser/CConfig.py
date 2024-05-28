@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 
 from sql.CSQLAgent import CSqlAgent
 from enums import JOB_TYPE, REPEAT_TV_ERROR_TYPES
-MAX_PALLET_PLACES = 36
+MAX_PALLET_PLACES = 60
 
 
 class ConfigError(Exception):

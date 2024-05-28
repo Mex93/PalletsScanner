@@ -12,43 +12,68 @@ class CPalletInfoBOX:
         self.blocked_frame = True
 
         self.labels = [
-            interface.labeL_in_pall_0,
-            interface.labeL_in_pall_1,
-            interface.labeL_in_pall_2,
-            interface.labeL_in_pall_3,
-            interface.labeL_in_pall_4,
-            interface.labeL_in_pall_5,
-            interface.labeL_in_pall_6,
-            interface.labeL_in_pall_7,
-            interface.labeL_in_pall_8,
-            interface.labeL_in_pall_9,
-            interface.labeL_in_pall_10,
-            interface.labeL_in_pall_11,
-            interface.labeL_in_pall_12,
-            interface.labeL_in_pall_13,
-            interface.labeL_in_pall_14,
-            interface.labeL_in_pall_15,
-            interface.labeL_in_pall_16,
-            interface.labeL_in_pall_17,
-            interface.labeL_in_pall_18,
-            interface.labeL_in_pall_19,
-            interface.labeL_in_pall_20,
-            interface.labeL_in_pall_21,
-            interface.labeL_in_pall_22,
-            interface.labeL_in_pall_23,
-            interface.labeL_in_pall_24,
-            interface.labeL_in_pall_25,
-            interface.labeL_in_pall_26,
-            interface.labeL_in_pall_27,
-            interface.labeL_in_pall_28,
-            interface.labeL_in_pall_29,
-            interface.labeL_in_pall_30,
-            interface.labeL_in_pall_31,
-            interface.labeL_in_pall_32,
-            interface.labeL_in_pall_33,
-            interface.labeL_in_pall_34,
-            interface.labeL_in_pall_35,
+            interface.pushButton_field_0,
+            interface.pushButton_field_1,
+            interface.pushButton_field_2,
+            interface.pushButton_field_3,
+            interface.pushButton_field_4,
+            interface.pushButton_field_5,
+            interface.pushButton_field_6,
+            interface.pushButton_field_7,
+            interface.pushButton_field_8,
+            interface.pushButton_field_9,
+            interface.pushButton_field_10,
+            interface.pushButton_field_11,
+            interface.pushButton_field_12,
+            interface.pushButton_field_13,
+            interface.pushButton_field_14,
+            interface.pushButton_field_15,
+            interface.pushButton_field_16,
+            interface.pushButton_field_17,
+            interface.pushButton_field_18,
+            interface.pushButton_field_19,
+            interface.pushButton_field_20,
+            interface.pushButton_field_21,
+            interface.pushButton_field_22,
+            interface.pushButton_field_23,
+            interface.pushButton_field_24,
+            interface.pushButton_field_25,
+            interface.pushButton_field_26,
+            interface.pushButton_field_27,
+            interface.pushButton_field_28,
+            interface.pushButton_field_29,
+            interface.pushButton_field_30,
+            interface.pushButton_field_31,
+            interface.pushButton_field_32,
+            interface.pushButton_field_33,
+            interface.pushButton_field_34,
+            interface.pushButton_field_35,
+            interface.pushButton_field_36,
+            interface.pushButton_field_37,
+            interface.pushButton_field_38,
+            interface.pushButton_field_39,
+            interface.pushButton_field_40,
+            interface.pushButton_field_41,
+            interface.pushButton_field_42,
+            interface.pushButton_field_43,
+            interface.pushButton_field_44,
+            interface.pushButton_field_45,
+            interface.pushButton_field_46,
+            interface.pushButton_field_47,
+            interface.pushButton_field_48,
+            interface.pushButton_field_49,
+            interface.pushButton_field_50,
+            interface.pushButton_field_51,
+            interface.pushButton_field_52,
+            interface.pushButton_field_53,
+            interface.pushButton_field_54,
+            interface.pushButton_field_55,
+            interface.pushButton_field_56,
+            interface.pushButton_field_57,
+            interface.pushButton_field_58,
+            interface.pushButton_field_59
         ]
+
         self.sn_list = []
 
         for index in range(0, MAX_PALLET_PLACES):
@@ -92,6 +117,15 @@ class CPalletInfoBOX:
                     return index
         return -1
 
+    def get_tv_sn_from_pallete_index(self, pindex: int) -> str | None:
+        """Получить серийник телека зная индекс"""
+
+        if isinstance(self.sn_list[pindex], str):
+            return self.sn_list[pindex]
+
+        return None
+
+
     def clear_field(self, place_index: int) -> bool:
         """Обнуление места"""
         if isinstance(self.sn_list[place_index], str):
@@ -100,7 +134,6 @@ class CPalletInfoBOX:
             self.labels[place_index].setText(self.empty_place_text)
             return True
         return False
-
 
     def get_pallet_empty_places(self) -> int:
         count = 0
