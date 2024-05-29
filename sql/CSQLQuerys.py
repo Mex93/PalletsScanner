@@ -60,6 +60,27 @@ class CSQLQuerys(CSqlAgent):
 
         return result
 
+    def get_scanned_tv_date(self, pallet_code: str, tv_sn: str):
+        """Инфа о телеке в паллете"""
+        query_string = (f"SELECT {SQL_PALLET_SCANNED.fd_scanned_data} "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_scanned} "
+                        f"WHERE "
+                        f"{SQL_PALLET_SCANNED.fd_fk_pallet_code} = %s AND "
+                        f"{SQL_PALLET_SCANNED.fd_tv_sn} = %s "
+                        f"LIMIT 1")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_code, tv_sn, ), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return False
+
+        sql_pass = result[0].get(SQL_PALLET_SCANNED.fd_scanned_data, None)
+        if sql_pass is not None:
+            return sql_pass
+        # print(result)
+
+        return False
+
     def is_pallette_completed(self, pallet_code: str) -> bool | None:
         """А готов ли паллет"""
         query_string = (f"SELECT {SQL_PALLET_SN.fd_assy_id}, {SQL_PALLET_SN.fd_completed_check} "

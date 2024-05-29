@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Отключена проверка шаблона паллета в режиме демонстрации,&#10;добавлена проверка регулярок ввода паллета и ввода серийника телека">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/CPalletInfoBox.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CPalletInfoBox.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/config.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config_parser/CConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/interface.ui" beforeDir="false" afterPath="$PROJECT_DIR$/ui/interface.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/sql_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715769707585</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса">
+      <option name="closed" value="true" />
+      <created>1716901398770</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1716901398770</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -309,7 +313,8 @@
     <MESSAGE value="Добавление линии в проверку готовности. Если линия не верна у собранного девайса. И в инфо режим добавил просмотр статуса" />
     <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации" />
     <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации,&#10;добавлена проверка регулярок ввода паллета и ввода серийника телека" />
-    <option name="LAST_COMMIT_MESSAGE" value="Отключена проверка шаблона паллета в режиме демонстрации,&#10;добавлена проверка регулярок ввода паллета и ввода серийника телека" />
+    <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса" />
+    <option name="LAST_COMMIT_MESSAGE" value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -321,12 +326,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>316</line>
+          <line>346</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>734</line>
+          <line>768</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

@@ -125,7 +125,6 @@ class CPalletInfoBOX:
 
         return None
 
-
     def clear_field(self, place_index: int) -> bool:
         """Обнуление места"""
         if isinstance(self.sn_list[place_index], str):

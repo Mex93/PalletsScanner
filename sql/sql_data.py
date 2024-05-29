@@ -19,6 +19,7 @@ class SQL_PALLET_SCANNED:  # таблица привязки телеков к �
     fd_assy_id = "assy_id"
     fd_fk_pallet_code = "pallet_code"  # номер паллет
     fd_created_data = "created_data"  # Дата создания
+    fd_scanned_data = "scanned_data"  # Дата создания
     fd_tv_sn = "tv_sn"  # серийник телека
     fd_tv_model_fk = "tv_model_fk"  # номер модели
 

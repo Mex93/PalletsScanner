@@ -20,6 +20,9 @@ from components.CExcelLog import CExcelLog
 from sql.CSQLQuerys import CSQLQuerys
 from sql.enums import CONNECT_DB_TYPE
 from sql.sql_data import SQL_PALLET_SCANNED, SQL_TABLE_TV_CONFIG, SQL_TABLE_ASSEMBLED_TV
+import datetime
+
+NON_DELETE_HOURS = 4
 
 
 class MainWindow(QMainWindow):
@@ -205,8 +208,6 @@ class MainWindow(QMainWindow):
     def on_clicked_on_pallet(self, pallet_index: int):
         if self.program_job_type == JOB_TYPE.MAIN:  # Привязка
             if self.cpallet.is_pallet_chosen():  # Палет выбран
-                # todo запилить проверку на время для удаления телека с паллета
-                # что бы время было не более 4 часов с момента добавления на паллет
 
                 def clear_time():
                     self.click_time = 0
@@ -266,23 +267,54 @@ class MainWindow(QMainWindow):
                             result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                             if result_connect is True:
                                 if csql.is_created_pallet(chosen_pallet) is True:
+                                    date = csql.get_scanned_tv_date(chosen_pallet, tv_sn)
+                                    if date is not False:
 
-                                    csql.delete_tv_on_pallet(tv_sn, chosen_pallet)
-                                    csql.set_completed_status(chosen_pallet, False)
+                                        # date
+                                        try:
+                                            tv_unix = (datetime.datetime.
+                                                       strptime(str(date), '%Y-%m-%d %H:%M:%S.%f+03:00').
+                                                       timestamp())
+                                            tv_unix = int(tv_unix)
 
-                                    # удаление
-                                    self.cpallets_box.clear_field(pallet_index)
+                                            global NON_DELETE_HOURS
+                                            tunix = get_current_unix_time() - (NON_DELETE_HOURS * 3600)
 
-                                    empty_places = self.cpallets_box.get_pallet_empty_places()
-                                    self.ccontrol_box.set_last_places(empty_places)
+                                            if tv_unix < tunix:
+                                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                                 text=f"Не могу исключить устройство '{tv_sn}' с паллета '{chosen_pallet}'!\n\n"
+                                                                      f"Нельзя исключать устройство, если с момента привязки прошло более {NON_DELETE_HOURS} часов.",
+                                                                 title="Внимание!",
+                                                                 variant_yes="Закрыть", variant_no="", callback=None)
+                                                return
 
-                                    self.bridge_del_tv_sn = None
-                                    self.bridge_del_pindex = None
-                                    self.bridge_del_old_pallet = None
+                                        except Exception as err:
+                                            print(err)
 
-                                    CExcelLog.print_log(chosen_pallet, f"Удалён SN: '{tv_sn}'", -1, self.assembled_line)
-                                    self.cpallet_label.set_error(4, "red", "Устройство удалено с паллета!")
-                                    success = True
+                                        csql.delete_tv_on_pallet(tv_sn, chosen_pallet)
+                                        csql.set_completed_status(chosen_pallet, False)
+
+                                        # удаление
+                                        self.cpallets_box.clear_field(pallet_index)
+
+                                        empty_places = self.cpallets_box.get_pallet_empty_places()
+                                        self.ccontrol_box.set_last_places(empty_places)
+
+                                        self.bridge_del_tv_sn = None
+                                        self.bridge_del_pindex = None
+                                        self.bridge_del_old_pallet = None
+
+                                        CExcelLog.print_log(chosen_pallet, f"Исключён SN: '{tv_sn}'", -1,
+                                                            self.assembled_line)
+                                        self.cpallet_label.set_error(4, "red", "Устройство исключено с паллета!")
+                                        success = True
+                                    else:
+                                        send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                         text=f"Не могу исключить устройство '{tv_sn}' с паллета '{chosen_pallet}'!\n\n"
+                                                              f"Устройство не привязано к этому паллету.",
+                                                         title="Внимание!",
+                                                         variant_yes="Закрыть", variant_no="", callback=None)
+                                        return
                         except:
                             self.send_error_message(
                                 "Во время получения данных списка устройств на паллете возникла ошибка.\n"
@@ -294,12 +326,10 @@ class MainWindow(QMainWindow):
 
                 if not success:
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                     text=f"Не могу удалить устройство с паллета!\n\n"
+                                     text=f"Не могу исключить устройство с паллета!\n\n"
                                           f"Позовите технолога!!!",
                                      title="Внимание!",
                                      variant_yes="Закрыть", variant_no="", callback=None)
-
-
 
     def on_user_input_sn_or_pallet(self):
         input_text = self.csn_input.get_current_text()
@@ -431,18 +461,21 @@ class MainWindow(QMainWindow):
                                             self.csn_input.set_clear_label()
                                             return
 
-                                        line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
-                                        if line_fk != self.assembled_line:
-                                            self.cpallet_label.set_error(2, "red", "Внимание!")
-                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                                                             text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
-                                                                  f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
-                                                                  f"Позовите технолога!",
-                                                             title="Внимание!",
-                                                             variant_yes="Закрыть", variant_no="", callback=None)
+                                        len_sn = len(input_text)
+                                        sn_last = input_text[len_sn - 3:len_sn]
+                                        if sn_last.find("001") == -1:  # Проверка на образец, образец везде пропустит
+                                            line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
+                                            if line_fk != self.assembled_line:
+                                                self.cpallet_label.set_error(2, "red", "Внимание!")
+                                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                                                 text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
+                                                                      f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
+                                                                      f"Позовите технолога!",
+                                                                 title="Внимание!",
+                                                                 variant_yes="Закрыть", variant_no="", callback=None)
 
-                                            self.csn_input.set_clear_label()
-                                            return
+                                                self.csn_input.set_clear_label()
+                                                return
 
                                         tv_fk = result.get(SQL_TABLE_TV_CONFIG.fd_tv_id, None)
                                     else:
@@ -656,8 +689,9 @@ class MainWindow(QMainWindow):
                             self.cpallets_box.set_unblock_frame()
                             if empty_places > 0:  # Места ещё есть
 
-                                if self.set_pallet_completed_status(input_text, False) is False:
-                                    print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
+                                # отключил, зачем открывать при каждом открытии палета
+                                # if self.set_pallet_completed_status(input_text, False) is False:
+                                #     print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 5")
 
                                 # todo Паллет заведён
                                 return True
