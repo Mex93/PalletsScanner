@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления">
       <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CPalletInfoBox.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CPalletInfoBox.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/sql_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/sql_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.ini" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,7 +289,23 @@
       <option name="project" value="LOCAL" />
       <updated>1716901398770</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления">
+      <option name="closed" value="true" />
+      <created>1716970125946</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1716970125946</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления">
+      <option name="closed" value="true" />
+      <created>1716970242556</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1716970242556</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,7 +327,8 @@
     <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации" />
     <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации,&#10;добавлена проверка регулярок ввода паллета и ввода серийника телека" />
     <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса" />
-    <option name="LAST_COMMIT_MESSAGE" value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса" />
+    <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления" />
+    <option name="LAST_COMMIT_MESSAGE" value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -326,12 +340,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>346</line>
+          <line>350</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>768</line>
+          <line>772</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
