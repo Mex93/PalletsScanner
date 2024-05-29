@@ -367,7 +367,7 @@ class MainWindow(QMainWindow):
                                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                      text=f"Указанный паллет '{chosen_pallet}' не найден!\n"
                                                           f"Данные паллета сброшены!\n\n"
-                                                          f"Внимание! Перескинируйте все телевизоры на другой паллет!!!",
+                                                          f"Внимание! Перескинируйте все устройства на другой паллет!!!",
                                                      title="Внимание!",
                                                      variant_yes="Закрыть", variant_no="", callback=None)
 
@@ -482,7 +482,7 @@ class MainWindow(QMainWindow):
                                         self.cpallet_label.set_error(2, "red", "Внимание!")
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                                                          text=f"Указанный серийный номер '{input_text}' не найден в числе "
-                                                              f"собранных телевизоров!\n"
+                                                              f"собранных устройств!\n"
                                                               f"Позовите технолога!",
                                                          title="Внимание!",
                                                          variant_yes="Закрыть", variant_no="", callback=None)
@@ -590,7 +590,7 @@ class MainWindow(QMainWindow):
                                 self.cpallet_label.set_error(2, "red", "Внимание!")
 
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                                 text=f"В паллете '{chosen_pallet}' уже есть телевизор с указанным серийным "
+                                                 text=f"В паллете '{chosen_pallet}' уже есть устройство с указанным серийным "
                                                       f"номером '{input_text}' !",
                                                  title="Внимание!",
                                                  variant_yes="Закрыть", variant_no="", callback=None)
@@ -604,7 +604,7 @@ class MainWindow(QMainWindow):
                     else:
                         self.cpallet_label.set_error(2, "red", "Внимание!")
                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                         text=f"Шаблон серийного номера телевизора не совпал с указанным серийным номером! '{template_tv}' -> | '{input_text}'",
+                                         text=f"Шаблон серийного номера устройства не совпал с указанным серийным номером! '{template_tv}' -> | '{input_text}'",
                                          title="Внимание!",
                                          variant_yes="Закрыть", variant_no="", callback=None)
                         self.csn_input.set_clear_label()
@@ -654,7 +654,7 @@ class MainWindow(QMainWindow):
                                         else:
                                             self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                                             text=f"В новом паллете '{input_text}' обнаружены телевизоры "
+                                                             text=f"В новом паллете '{input_text}' обнаружены устройства "
                                                                   f"!!!\n\n"
                                                                   f"Так быть не должно! Позовите технолога!!!",
                                                              title="Внимание!",
@@ -831,7 +831,7 @@ class MainWindow(QMainWindow):
                         if self.program_job_type == JOB_TYPE.INFO:
                             self.cpallet_label.set_error(2, "red", "Внимание!")
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                             text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных телевизоров!",
+                                             text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных устройств!",
                                              title="Внимание!",
                                              variant_yes="Закрыть", variant_no="", callback=None)
                         else:
@@ -919,7 +919,7 @@ class MainWindow(QMainWindow):
             if variant == "cancel":
                 self.cpallet_label.set_error(2, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                 text=f"На паллете '{pallette_code}' нет телевизоров.\n\n"
+                                 text=f"На паллете '{pallette_code}' нет устройств.\n\n"
                                       f"Вы уверены, что хотите закончить формирование ?\n"
                                       f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.",
                                  title="Внимание!",
@@ -929,7 +929,7 @@ class MainWindow(QMainWindow):
             elif variant == "success":
                 self.cpallet_label.set_error(2, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
-                                 text=f"На паллете '{pallette_code}' нет телевизоров.",
+                                 text=f"На паллете '{pallette_code}' нет устройств.",
                                  title="Внимание!",
                                  variant_yes="Закрыть", variant_no="", callback=None)
             return
