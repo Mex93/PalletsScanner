@@ -556,6 +556,10 @@ class MainWindow(QMainWindow):
                                             # todo Паллет набился но не обнулён, так как авто комплект отключен
                                     else:
                                         self.cpallet_label.set_error(2, "grey", f"Устройство добавлено на паллет!")
+
+                                        if self.set_pallet_completed_status(chosen_pallet, False) is False:
+                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 8")
+
                                     return True
 
                                 else:
