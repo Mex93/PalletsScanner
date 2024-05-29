@@ -307,6 +307,10 @@ class MainWindow(QMainWindow):
                                         CExcelLog.print_log(chosen_pallet, f"Исключён SN: '{tv_sn}'", -1,
                                                             self.assembled_line)
                                         self.cpallet_label.set_error(4, "red", "Устройство исключено с паллета!")
+
+                                        if self.set_pallet_completed_status(chosen_pallet, False) is False:
+                                            print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 6")
+
                                         success = True
                                     else:
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
