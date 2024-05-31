@@ -81,6 +81,26 @@ class CSQLQuerys(CSqlAgent):
 
         return False
 
+    def get_max_pallets(self, pallet_template: str):
+        """Сколько всего паллетов согласно шаблону"""
+        query_string = (f"SELECT COUNT(*) as max_pallets "
+                        f"FROM {SQL_TABLE_NAME.tb_pallet_sn} "
+                        f"WHERE "
+                        f"{SQL_PALLET_SCANNED.fd_fk_pallet_code} LIKE %s "
+                        f"LIMIT 1000")  # на всякий лимит
+
+        result = self.sql_query_and_get_result(
+            self.get_sql_handle(), query_string, (pallet_template, ), "_1", )  # Запрос типа аасоциативного массива
+        if result is False:  # Errorrrrrrrrrrrrr based data
+            return 0
+
+        sql_pass = result[0].get("max_pallets", None)
+        if sql_pass is not None:
+            return sql_pass
+        # print(result)
+
+        return 0
+
     def is_pallette_completed(self, pallet_code: str) -> bool | None:
         """А готов ли паллет"""
         query_string = (f"SELECT {SQL_PALLET_SN.fd_assy_id}, {SQL_PALLET_SN.fd_completed_check} "

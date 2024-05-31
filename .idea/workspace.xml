@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Добавлено авто открытие паллета при добавлении тв к закрытому">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CControlPanel.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CControlPanel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/interface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui/interface.ui" beforeDir="false" afterPath="$PROJECT_DIR$/ui/interface.ui" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,16 +42,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner&quot;,
-    &quot;two.files.diff.last.used.folder&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner/sql&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Ryazanov/PycharmProjects/palletScanner",
+    "two.files.diff.last.used.folder": "C:/Users/Ryazanov/PycharmProjects/palletScanner/sql"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner" />
@@ -329,7 +334,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716971058301</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Добавлено авто открытие паллета при добавлении тв к закрытому">
+      <option name="closed" value="true" />
+      <created>1716974667445</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1716974667445</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -352,7 +365,8 @@
     <MESSAGE value="Отключена проверка шаблона паллета в режиме демонстрации,&#10;добавлена проверка регулярок ввода паллета и ввода серийника телека" />
     <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса" />
     <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления" />
-    <option name="LAST_COMMIT_MESSAGE" value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления" />
+    <MESSAGE value="Добавлено авто открытие паллета при добавлении тв к закрытому" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлено авто открытие паллета при добавлении тв к закрытому" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -364,12 +378,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>349</line>
+          <line>351</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>775</line>
+          <line>785</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

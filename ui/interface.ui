@@ -156,6 +156,19 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QLabel" name="label_all_pallets">
+               <property name="font">
+                <font>
+                 <pointsize>15</pointsize>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Всего паллетов согласно шаблону: 2</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>

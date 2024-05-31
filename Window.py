@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
         self.cpallet = CPallet()
         self.cpallet.set_pallet_template(pallet_template)
         self.cpallet.set_tv_template(tv_template)
+        self.ccontrol_box.set_max_pallets(0)
 
         # slots
 
@@ -203,6 +204,7 @@ class MainWindow(QMainWindow):
         self.click_time = 0
         self.click_count = 0
         self.click_pindex = 0
+
         del self.cconfig
 
     def on_clicked_on_pallet(self, pallet_index: int):
@@ -252,7 +254,7 @@ class MainWindow(QMainWindow):
                                          variant_yes="Да", variant_no="Отмена", callback=self.i_im_grut)
 
     def i_im_grut(self, val):
-        """ Удаление паллета"""
+        """ Удаление из паллета"""
         if val.text() == "Да":
             success = False
             if self.cpallet.is_pallet_chosen():  # Палет выбран
@@ -556,7 +558,7 @@ class MainWindow(QMainWindow):
                                             # todo Паллет набился но не обнулён, так как авто комплект отключен
                                     else:
                                         self.cpallet_label.set_error(2, "grey", f"Устройство добавлено на паллет!")
-
+                                        # ранее небыло
                                         if self.set_pallet_completed_status(chosen_pallet, False) is False:
                                             print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 8")
 
@@ -651,6 +653,7 @@ class MainWindow(QMainWindow):
 
                                     if success_load is True:
                                         self.cpallet_label.set_error(2, "blue1", "Паллет открыт!")
+                                        self.ccontrol_box.update_max_pallets_field(template_pallet, csql)
 
                                 else:  # если паллета нет - создаём
 
@@ -658,6 +661,7 @@ class MainWindow(QMainWindow):
                                         if csql.is_pallet_have_any_sn(input_text) is False:
                                             success_load = True
                                             self.cpallet_label.set_error(2, "blue2", "Паллет успешно создан!")
+                                            self.ccontrol_box.update_max_pallets_field(template_pallet, csql)
                                         else:
                                             self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
@@ -736,22 +740,28 @@ class MainWindow(QMainWindow):
 
     def set_pallet_completed_status(self, pallette_code: str, variant: bool, sql_handle: any = False):
 
+        sql_new = False
         if sql_handle is False:
+            sql_new = True
             csql = CSQLQuerys()
         else:
             csql = sql_handle
         try:
-            result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
-            if result_connect is True:
-                if csql.set_completed_status(pallette_code, variant) is True:
-                    return True
+            if sql_new is True:
+                result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+                if result_connect is False:
+                    return False
+
+            if csql.set_completed_status(pallette_code, variant) is True:
+                return True
         except:
             self.send_error_message(
                 "Во время установки статуса комплектности прозошла ошибка.\n"
                 "Обратитесь к системному администратору!\n\n"
                 "Код ошибки: 'load_job_mode -> auto_complect -> set_completed_status'")
         finally:
-            csql.disconnect_from_db()
+            if sql_new is True:
+                csql.disconnect_from_db()
         return False
 
     def load_info_mode(self, input_text, template_pallet):
@@ -782,6 +792,8 @@ class MainWindow(QMainWindow):
                 self.csn_input.set_clear_label()
                 self.cpallet_label.set_error(2, "grey",
                                              "Паллет открыт для просмотра!")
+
+                self.ccontrol_box.update_max_pallets_field(template_pallet)
                 return True
         else:
             self.cpallet_label.set_error(2, "red", "Внимание!")

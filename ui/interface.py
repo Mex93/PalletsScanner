@@ -105,6 +105,12 @@ class Ui_MainWindow(object):
 
         self.places_frame.addWidget(self.label_last_places)
 
+        self.label_all_pallets = QLabel(self.groupBox_Flashing)
+        self.label_all_pallets.setObjectName(u"label_all_pallets")
+        self.label_all_pallets.setFont(font2)
+
+        self.places_frame.addWidget(self.label_all_pallets)
+
 
         self.horizontalLayout_4.addLayout(self.places_frame)
 
@@ -877,6 +883,7 @@ class Ui_MainWindow(object):
         self.label_pallet_name.setText(QCoreApplication.translate("MainWindow", u"XXXXXXXXXX", None))
         self.label_all_places.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043c\u0435\u0441\u0442: 36", None))
         self.label_last_places.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c \u043c\u0435\u0441\u0442: 2", None))
+        self.label_all_pallets.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u043f\u0430\u043b\u043b\u0435\u0442\u043e\u0432 \u0441\u043e\u0433\u043b\u0430\u0441\u043d\u043e \u0448\u0430\u0431\u043b\u043e\u043d\u0443: 2", None))
         self.pushButton_set_cancel.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0430\u043b\u043b\u0435\u0442", None))
         self.pushButton_set_complete.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c \u043f\u0430\u043b\u043b\u0435\u0442", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"\u0412\u0432\u043e\u0434:", None))
