@@ -42,17 +42,18 @@ class MainWindow(QMainWindow):
         # config ------------------------------
 
         self.cconfig = CConfig()
-        if self.cconfig.load_data() is False:
-            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
-                             text="Ошибка в файле конфигурации!\n"
-                                  "Один или несколько параметров ошибочны!\n\n"
-                                  "Позовите технолога!",
-                             title="Внимание!",
-                             variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
-            return
 
         # ---------------------------------------
         try:
+            if self.cconfig.load_data() is False:
+                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
+                                 text="Ошибка в файле конфигурации!\n"
+                                      "Один или несколько параметров ошибочны!\n\n"
+                                      "Позовите технолога!",
+                                 title="Внимание!",
+                                 variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
+                return
+
             self.assembled_line = self.cconfig.get_current_line()
             if self.assembled_line is None:
                 raise ValueError("Неверно выставлен номер производственной линии!!")
