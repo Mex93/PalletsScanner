@@ -29,6 +29,7 @@ class CConfig:
         self.__TV_TEMPLATE = ''  # Шаблон телевизора
         self.__TV_REPEAT_ERROR_TYPE = ''  # Тип ошибки про повтор телека - 0 - Окно с подтверждением, 1 - Просто в чат
         self.__CURRENT_LINE = ''  # Текущая производственная линия
+        self.__AUTO_COMPLETE_WINDOW = ''  # Окно автозавершения паллета
 
         self.__config = configparser.ConfigParser()
         self.__config.add_section('database')
@@ -49,6 +50,7 @@ class CConfig:
         self.__TV_TEMPLATE = ''
         self.__TV_REPEAT_ERROR_TYPE = ''
         self.__CURRENT_LINE = ''
+        self.__AUTO_COMPLETE_WINDOW = ''
 
     def get_config(self):
         self.__config.read('config.ini', encoding="utf-8")
@@ -65,6 +67,7 @@ class CConfig:
         self.__PALLET_ALL_PLACES = self.__config.get('pallet', 'PALLET_MAX_PLACES')
         self.__PALLET_AUTO_COMPLETE = self.__config.get('pallet', 'PALLET_AUTO_COMPLETE')
         self.__PALLET_TEMPLATE = self.__config.get('pallet', 'PALLET_TEMPLATE')
+        self.__AUTO_COMPLETE_WINDOW = self.__config.get('pallet', 'PALLET_AUTO_COMPLETE_WINDOW')
 
         self.__TV_TEMPLATE = self.__config.get('tv', 'TV_TEMPLATE')
         self.__TV_REPEAT_ERROR_TYPE = self.__config.get('tv', 'TV_REPEAT_ERROR_TYPE')
@@ -90,6 +93,7 @@ class CConfig:
             self.__config.set('pallet', 'PALLET_MAX_PLACES', '2')
             self.__config.set('pallet', 'PALLET_AUTO_COMPLETE', '1')
             self.__config.set('pallet', 'PALLET_TEMPLATE', '****24****')
+            self.__config.set('pallet', 'PALLET_AUTO_COMPLETE_WINDOW', '1')
 
             self.__config.set('tv', 'TV_TEMPLATE', '*******')
             self.__config.set('tv', 'TV_REPEAT_ERROR_TYPE', '0')
@@ -136,6 +140,12 @@ class CConfig:
 
     def get_pallet_auto_completed(self) -> bool:
         numb = int(self.__PALLET_AUTO_COMPLETE)
+        if numb in (0, 1):
+            return bool(numb)
+        return False
+
+    def get_pallet_autocomplete_window(self) -> bool:
+        numb = int(self.__AUTO_COMPLETE_WINDOW)
         if numb in (0, 1):
             return bool(numb)
         return False

@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.__base_program_version = "0.4"  # Менять при каждом обновлении
+        self.__base_program_version = "0.5"  # Менять при каждом обновлении
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.set_block_interface()
@@ -60,7 +60,8 @@ class MainWindow(QMainWindow):
 
             self.repeat_tv_error_type = self.cconfig.get_repeat_tv_error_type()
             program_job_type = self.cconfig.get_soft_job_type()
-            self.auto_complect = self.cconfig.get_pallet_auto_completed()
+            self.auto_complect_check = self.cconfig.get_pallet_auto_completed()
+            self.auto_complect_window = self.cconfig.get_pallet_autocomplete_window()
             max_places_in_pallets = self.cconfig.get_pallet_max_places()
             pallet_template = self.cconfig.get_pallet_template()
             tv_template = self.cconfig.get_tv_template()
@@ -96,7 +97,7 @@ class MainWindow(QMainWindow):
 
         # todo Запрет на совпадение шаблонов
         if pallet_template == tv_template:
-            self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+            self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                              text="Ошибка в заданных шаблонах!\n"
                                   "Шаблоны ТВ и паллета совпадают!\n\n"
@@ -309,7 +310,7 @@ class MainWindow(QMainWindow):
 
                                         CExcelLog.print_log(chosen_pallet, f"Исключён SN: '{tv_sn}'", -1,
                                                             self.assembled_line)
-                                        self.cpallet_label.set_error(4, "red", "Устройство исключено с паллета!")
+                                        self.cpallet_label.set_error(4.0, "red", "Устройство исключено с паллета!")
 
                                         if self.set_pallet_completed_status(chosen_pallet, False) is False:
                                             print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 6")
@@ -369,7 +370,7 @@ class MainWindow(QMainWindow):
                             result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
                             if result_connect is True:
                                 if csql.is_created_pallet(chosen_pallet) is False:
-                                    self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                    self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
                                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                      text=f"Указанный паллет '{chosen_pallet}' не найден!\n"
                                                           f"Данные паллета сброшены!\n\n"
@@ -394,8 +395,8 @@ class MainWindow(QMainWindow):
 
                         if empty_places <= 0:
                             # TODO Вход при первичном вводе паллета если он полный
-                            if self.auto_complect is True:
-                                self.cpallet_label.set_error(3, "green", "Паллет полон и автоматически закрыт!")
+                            if self.auto_complect_check is True:
+                                self.cpallet_label.set_error(3.0, "green", "Паллет полон и автоматически закрыт!")
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                  text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
                                                       f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -410,7 +411,7 @@ class MainWindow(QMainWindow):
                                     print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 1")
 
                             else:  # автокомплект отключен
-                                self.cpallet_label.set_error(2, "green", "Паллет полон и автоматически закрыт!")
+                                self.cpallet_label.set_error(2.0, "green", "Паллет полон и автоматически закрыт!")
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                  text=f"Указанный паллет '{chosen_pallet}' уже сформирован полностью!\n"
                                                       f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -440,7 +441,7 @@ class MainWindow(QMainWindow):
                                         old_pallete_code = result
 
                                         if old_pallete_code is not None:
-                                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                            self.cpallet_label.set_error(2.0, "red", "Внимание!")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                              text=f"Указанный серийный номер '{input_text}' найден в другом паллете '{old_pallete_code}' !\n"
                                                                   f"Позовите технолога!",
@@ -456,7 +457,7 @@ class MainWindow(QMainWindow):
                                         complect_check_time = result.get(SQL_TABLE_ASSEMBLED_TV.fd_completed_scan_time,
                                                                          None)
                                         if complect_check_time is None:
-                                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                                            self.cpallet_label.set_error(2.0, "red", "Внимание!")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                                                              text=f"Указанный серийный номер '{input_text}' не прошёл "
                                                                   f"проверку комплектности на упаковке !\n"
@@ -472,7 +473,7 @@ class MainWindow(QMainWindow):
                                         if sn_last.find("001") == -1:  # Проверка на образец, образец везде пропустит
                                             line_fk = result.get(SQL_TABLE_ASSEMBLED_TV.fd_line_fk, None)
                                             if line_fk != self.assembled_line:
-                                                self.cpallet_label.set_error(2, "red", "Внимание!")
+                                                self.cpallet_label.set_error(2.0, "red", "Внимание!")
                                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                                                                  text=f"Указанный серийный номер '{input_text}' был произведён на производственной линии №:{line_fk}!\n"
                                                                       f"В конфигурации программы указан №:{self.assembled_line}.\n\n"
@@ -485,7 +486,7 @@ class MainWindow(QMainWindow):
 
                                         tv_fk = result.get(SQL_TABLE_TV_CONFIG.fd_tv_id, None)
                                     else:
-                                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                                        self.cpallet_label.set_error(2.0, "red", "Внимание!")
                                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                                                          text=f"Указанный серийный номер '{input_text}' не найден в числе "
                                                               f"собранных устройств!\n"
@@ -534,22 +535,26 @@ class MainWindow(QMainWindow):
 
                                     if empty_places <= 0:
                                         # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
-                                        if self.auto_complect is True:
-                                            self.cpallet_label.set_error(3, "green", "Паллет сформирован и автоматически закрыт.")
-                                            send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
-                                                             text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
-                                                                  f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
-                                                                  f"Паллет готов к отгрузке!",
-                                                             title="Успех!",
-                                                             variant_yes="Закрыть", variant_no="", callback=None)
+                                        if self.auto_complect_check is True:
+
+                                            self.cpallet_label.set_error(5.0, "green",
+                                                                         "Паллет сформирован и автоматически закрыт.")
+                                            if self.auto_complect_window:
+                                                send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
+                                                                 text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
+                                                                      f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
+                                                                      f"Паллет готов к отгрузке!",
+                                                                 title="Успех!",
+                                                                 variant_yes="Закрыть", variant_no="", callback=None)
 
                                             if self.set_pallet_completed_status(chosen_pallet, True) is False:
                                                 print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 2")
 
-                                            self.clear_current_pallet()
+                                            self.clear_current_pallet_no_color()
+
                                             # todo Паллет обнулён из за переполнения
                                         else:  # автокомплект отключен
-                                            self.cpallet_label.set_error(3, "green", "Паллет успешно сформирован.")
+                                            self.cpallet_label.set_error(3.0, "green", "Паллет успешно сформирован.")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                              text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
                                                                   f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
@@ -558,7 +563,7 @@ class MainWindow(QMainWindow):
                                                              variant_yes="Закрыть", variant_no="", callback=None)
                                             # todo Паллет набился но не обнулён, так как авто комплект отключен
                                     else:
-                                        self.cpallet_label.set_error(2, "grey", f"Устройство добавлено на паллет!")
+                                        self.cpallet_label.set_error(2.0, "grey", f"Устройство добавлено на паллет!")
                                         # ранее небыло
                                         if self.set_pallet_completed_status(chosen_pallet, False) is False:
                                             print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 8")
@@ -566,7 +571,7 @@ class MainWindow(QMainWindow):
                                     return True
 
                                 else:
-                                    self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                    self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
                                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                                                      text=f"В обработчике привязки SN к паллету произошла ошибка. Паллет отвязан от SN !\n"
                                                           f"Позовите технолога!!!",
@@ -597,7 +602,7 @@ class MainWindow(QMainWindow):
                                     return False
                         else:
                             if self.repeat_tv_error_type == REPEAT_TV_ERROR_TYPES.WINDOW:
-                                self.cpallet_label.set_error(2, "red", "Внимание!")
+                                self.cpallet_label.set_error(2.0, "red", "Внимание!")
 
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                  text=f"В паллете '{chosen_pallet}' уже есть устройство с указанным серийным "
@@ -606,13 +611,13 @@ class MainWindow(QMainWindow):
                                                  variant_yes="Закрыть", variant_no="", callback=None)
                                 self.csn_input.set_clear_label()
                             else:
-                                self.cpallet_label.set_error(3, "yellow", f"Повтор SN: '{input_text}'")
+                                self.cpallet_label.set_error(3.0, "yellow", f"Повтор SN: '{input_text}'")
                                 self.csn_input.set_clear_label()
 
                             return
 
                     else:
-                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                        self.cpallet_label.set_error(2.0, "red", "Внимание!")
                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                          text=f"Шаблон серийного номера устройства не совпал с указанным серийным номером! '{template_tv}' -> | '{input_text}'",
                                          title="Внимание!",
@@ -620,7 +625,7 @@ class MainWindow(QMainWindow):
                         self.csn_input.set_clear_label()
                         return
                 else:
-                    self.cpallet_label.set_error(2, "red", "Внимание!")
+                    self.cpallet_label.set_error(2.0, "red", "Внимание!")
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                      text=f"Ошибка ввода SN устройства!\n"
                                           f"Допускается вводить только цифры и буквы латинского алфавита.",
@@ -653,7 +658,7 @@ class MainWindow(QMainWindow):
                                             success_load = True
 
                                     if success_load is True:
-                                        self.cpallet_label.set_error(2, "blue1", "Паллет открыт!")
+                                        self.cpallet_label.set_error(2.0, "blue1", "Паллет открыт!")
                                         self.ccontrol_box.update_max_pallets_field(template_pallet, csql)
 
                                 else:  # если паллета нет - создаём
@@ -661,10 +666,10 @@ class MainWindow(QMainWindow):
                                     if csql.create_new_pallet(input_text, self.assembled_line) is not False:
                                         if csql.is_pallet_have_any_sn(input_text) is False:
                                             success_load = True
-                                            self.cpallet_label.set_error(2, "blue2", "Паллет успешно создан!")
+                                            self.cpallet_label.set_error(2.0, "blue2", "Паллет успешно создан!")
                                             self.ccontrol_box.update_max_pallets_field(template_pallet, csql)
                                         else:
-                                            self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+                                            self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                              text=f"В новом паллете '{input_text}' обнаружены устройства "
                                                                   f"!!!\n\n"
@@ -708,7 +713,7 @@ class MainWindow(QMainWindow):
                                 # todo Паллет заведён
                                 return True
                             else:  # Мест нет
-                                self.cpallet_label.set_error(2, "red", "Внимание!")
+                                self.cpallet_label.set_error(2.0, "red", "Внимание!")
                                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                                  text=f"В паллете '{input_text}' больше нет места.\n\n"
                                                       f"Вы можете изменить конфиг, добавив дополнительные места, или "
@@ -722,14 +727,14 @@ class MainWindow(QMainWindow):
                                 return True
 
                     else:
-                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                        self.cpallet_label.set_error(2.0, "red", "Внимание!")
                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                          text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
                                          title="Внимание!",
                                          variant_yes="Закрыть", variant_no="", callback=None)
                         self.csn_input.set_clear_label()
                 else:
-                    self.cpallet_label.set_error(2, "red", "Внимание!")
+                    self.cpallet_label.set_error(2.0, "red", "Внимание!")
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                      text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
                                           f"Длина SN номера паллета должна быть от 9 до 20 символов.",
@@ -791,13 +796,13 @@ class MainWindow(QMainWindow):
 
                 self.cpallet_label.set_name(input_text)
                 self.csn_input.set_clear_label()
-                self.cpallet_label.set_error(2, "grey",
+                self.cpallet_label.set_error(2.0, "grey",
                                              "Паллет открыт для просмотра!")
 
                 self.ccontrol_box.update_max_pallets_field(template_pallet)
                 return True
         else:
-            self.cpallet_label.set_error(2, "red", "Внимание!")
+            self.cpallet_label.set_error(2.0, "red", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
                                   f"Длина SN номера паллета должна быть от 9 до 20 символов!",
@@ -805,7 +810,7 @@ class MainWindow(QMainWindow):
                              variant_yes="Закрыть", variant_no="", callback=None)
             self.csn_input.set_clear_label()
         # else:
-        #     self.cpallet_label.set_error(2, "red", "Внимание!")
+        #     self.cpallet_label.set_error(2.0, "red", "Внимание!")
         #     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
         #                      text=f"Шаблон паллета не совпал с указанным номером! '{template_pallet}' ->| '{input_text}'",
         #                      title="Внимание!",
@@ -849,7 +854,7 @@ class MainWindow(QMainWindow):
 
                     else:
                         if self.program_job_type == JOB_TYPE.INFO:
-                            self.cpallet_label.set_error(2, "red", "Внимание!")
+                            self.cpallet_label.set_error(2.0, "red", "Внимание!")
                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                              text=f"Указанный паллет '{pallette_code}' найден, но не имеет привязанных устройств!",
                                              title="Внимание!",
@@ -860,7 +865,7 @@ class MainWindow(QMainWindow):
                 else:
 
                     if self.program_job_type == JOB_TYPE.INFO:
-                        self.cpallet_label.set_error(2, "red", "Внимание!")
+                        self.cpallet_label.set_error(2.0, "red", "Внимание!")
                         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                          text=f"Указанный паллет '{pallette_code}' не найден!",
                                          title="Внимание!",
@@ -911,7 +916,7 @@ class MainWindow(QMainWindow):
             return
 
         if not self.cpallet.is_pallet_chosen():
-            self.cpallet_label.set_error(2, "yellow", "Внимание!")
+            self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=f"Вы не ввели номер паллета.",
                              title="Внимание!",
@@ -929,7 +934,7 @@ class MainWindow(QMainWindow):
         # print(current_count_in_pallet)
 
         if max_places == 0:
-            self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+            self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=f"С паллетом '{pallette_code}' возникла ошибка.",
                              title="Внимание! Позовите технолога!!!",
@@ -937,7 +942,7 @@ class MainWindow(QMainWindow):
             return
         if empty_places == max_places:
             if variant == "cancel":
-                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                  text=f"На паллете '{pallette_code}' нет устройств.\n\n"
                                       f"Вы уверены, что хотите закончить формирование ?\n"
@@ -947,7 +952,7 @@ class MainWindow(QMainWindow):
                                  callback=self.on_user_clicked_variant_on_btn_cancel)
 
             elif variant == "success":
-                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                  text=f"На паллете '{pallette_code}' нет устройств.",
                                  title="Внимание!",
@@ -960,7 +965,7 @@ class MainWindow(QMainWindow):
             # Поэтому только автозакрытие!
 
             # То что Саша насоветовал
-            # self.cpallet_label.set_error(2, "yellow", "Внимание!")
+            # self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
             # send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
             #                  text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
             #                        f"Паллет ещё не заполнен!\n\n"
@@ -974,7 +979,7 @@ class MainWindow(QMainWindow):
             # если меньше чем в конфиге на паллете то пусть технолога зовут
             if current_count_in_pallet == max_places:
 
-                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                  text=(f"Вы уверены, что хотите закончить формирование паллета '{pallette_code}' ?\n\n"
                                        f"Продолжить формирование можно в любой момент, просто введите номер этого паллета.\n\n"
@@ -984,7 +989,7 @@ class MainWindow(QMainWindow):
                                  callback=self.on_user_clicked_variant_btn_pallette_complete)
             else:
 
-                self.cpallet_label.set_error(2, "yellow", "Внимание!")
+                self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
                 send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                  text=(
                                      f"Вы не можете завершить паллет '{pallette_code}', так как не все устройства отсканированы.\n\n"
@@ -994,7 +999,7 @@ class MainWindow(QMainWindow):
                                  callback=None)
 
         elif variant == "cancel":
-            self.cpallet_label.set_error(2, "yellow", "Внимание!")
+            self.cpallet_label.set_error(2.0, "yellow", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=(f"Вы уверены, что хотите отменить формирование паллета '{pallette_code}' ?\n\n"
                                    f"Продолжить формирование можно в любой момент, просто введите номер этого паллета."),
@@ -1011,7 +1016,7 @@ class MainWindow(QMainWindow):
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
 
-            self.cpallet_label.set_error(3, "yellow", f"Паллет '{pallette_code}' отменён!")
+            self.cpallet_label.set_error(3.0, "yellow", f"Паллет '{pallette_code}' отменён!")
         else:
             pass
 
@@ -1026,7 +1031,7 @@ class MainWindow(QMainWindow):
 
             self.csn_input.set_clear_label()
             self.clear_current_pallet()
-            self.cpallet_label.set_error(3, "green", f"Паллет '{pallette_code}' сформирован!")
+            self.cpallet_label.set_error(3.0, "green", f"Паллет '{pallette_code}' сформирован!")
 
         else:
             pass
@@ -1043,7 +1048,7 @@ class MainWindow(QMainWindow):
 
     def send_error_message(self, text: str):
         self.set_block_interface()
-        self.cpallet_label.set_error(2, "red", "Внимание! Возникла ошибка.")
+        self.cpallet_label.set_error(2.0, "red", "Внимание! Возникла ошибка.")
         send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_ERROR,
                          text=text,
                          title="Фатальная ошибка",
@@ -1053,6 +1058,16 @@ class MainWindow(QMainWindow):
         self.ccontrol_box.set_max_places(0)
         self.ccontrol_box.set_last_places(0)
         self.cpallet_label.clear()
+        self.csn_input.disabled_btns()
+        self.cpallet.set_pallet_chosen("")
+        self.csn_input.set_clear_label()
+        self.cpallets_box.clear_box()
+        self.cpallets_box.set_block_frame()
+
+    def clear_current_pallet_no_color(self):
+        self.ccontrol_box.set_max_places(0)
+        self.ccontrol_box.set_last_places(0)
+        self.cpallet_label.clear_no_color()
         self.csn_input.disabled_btns()
         self.cpallet.set_pallet_chosen("")
         self.csn_input.set_clear_label()

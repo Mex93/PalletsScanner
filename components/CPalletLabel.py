@@ -25,8 +25,11 @@ class CPalletLabel:
         self.set_name(self.label_default_text)
         self.set_default_color()
 
-    def set_error(self, time_sec: int, color: str, text: str):
-        if len(text) > 0 and time_sec > 0 and len(color) > 0:
+    def clear_no_color(self):
+        self.set_name(self.label_default_text)
+
+    def set_error(self, time_sec: float, color: str, text: str):
+        if len(text) > 0 and time_sec > 0.0 and len(color) > 0:
             self.label.setText(text)
             if color == "red":
                 self.label.setStyleSheet(u"background-color:red")
