@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Счётчик паллет по шаблону + исправление мини багэ с sql, откючал у автономных функций коннект неверно">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Update error with config exceptions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +45,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/dashboardNew&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner&quot;,
     &quot;two.files.diff.last.used.folder&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner/sql&quot;
   }
 }</component>
@@ -345,7 +346,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717141750364</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Update error with config exceptions">
+      <option name="closed" value="true" />
+      <created>1718965180143</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1718965180143</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -370,7 +379,8 @@
     <MESSAGE value="Удаление телевизоров с паллета по клику на телеке. Расширение слотов до 60 + перерисовка интерфейса + удалить можно не старше 4 часов с момента добавления" />
     <MESSAGE value="Добавлено авто открытие паллета при добавлении тв к закрытому" />
     <MESSAGE value="Счётчик паллет по шаблону + исправление мини багэ с sql, откючал у автономных функций коннект неверно" />
-    <option name="LAST_COMMIT_MESSAGE" value="Счётчик паллет по шаблону + исправление мини багэ с sql, откючал у автономных функций коннект неверно" />
+    <MESSAGE value="Update error with config exceptions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update error with config exceptions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -382,12 +392,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>351</line>
+          <line>352</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>785</line>
+          <line>786</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

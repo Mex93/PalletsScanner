@@ -535,7 +535,7 @@ class MainWindow(QMainWindow):
                                     if empty_places <= 0:
                                         # TODO Вход в присвоение сн паллету со ввода в ещё не полный паллет
                                         if self.auto_complect is True:
-                                            self.cpallet_label.set_error(3, "green", "Паллет сформирован и автозакрыт.")
+                                            self.cpallet_label.set_error(3, "green", "Паллет сформирован и автоматически закрыт.")
                                             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_INFO,
                                                              text=f"Указанный паллет '{chosen_pallet}' сформирован!\n"
                                                                   f"Помещено: {self.cpallets_box.get_closest_places()} штук\n\n"
