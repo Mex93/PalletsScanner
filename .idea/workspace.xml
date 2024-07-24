@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Update error with config exceptions">
+    <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="Добавлена возможность отключать окно набивки паллета. Просто напишет в лейбл что паллет автозаккрыт. &#10;Исправлен баг с таймерами. Оказывается флоат время, а не int&#10;Исправлено автозакрыт на автоматически закрыт">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,17 +37,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner&quot;,
-    &quot;two.files.diff.last.used.folder&quot;: &quot;C:/Users/Ryazanov/PycharmProjects/palletScanner/sql&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Ryazanov/PycharmProjects/SNScanner",
+    "two.files.diff.last.used.folder": "C:/Users/Ryazanov/PycharmProjects/palletScanner/sql"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Ryazanov\PycharmProjects\palletScanner" />
@@ -354,7 +353,23 @@
       <option name="project" value="LOCAL" />
       <updated>1718965180143</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Update error with config exceptions">
+      <option name="closed" value="true" />
+      <created>1721120073295</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1721120073295</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Добавлена возможность отключать окно набивки паллета. Просто напишет в лейбл что паллет автозаккрыт. &#10;Исправлен баг с таймерами. Оказывается флоат время, а не int&#10;Исправлено автозакрыт на автоматически закрыт">
+      <option name="closed" value="true" />
+      <created>1721125599535</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1721125599535</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -380,7 +395,8 @@
     <MESSAGE value="Добавлено авто открытие паллета при добавлении тв к закрытому" />
     <MESSAGE value="Счётчик паллет по шаблону + исправление мини багэ с sql, откючал у автономных функций коннект неверно" />
     <MESSAGE value="Update error with config exceptions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update error with config exceptions" />
+    <MESSAGE value="Добавлена возможность отключать окно набивки паллета. Просто напишет в лейбл что паллет автозаккрыт. &#10;Исправлен баг с таймерами. Оказывается флоат время, а не int&#10;Исправлено автозакрыт на автоматически закрыт" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлена возможность отключать окно набивки паллета. Просто напишет в лейбл что паллет автозаккрыт. &#10;Исправлен баг с таймерами. Оказывается флоат время, а не int&#10;Исправлено автозакрыт на автоматически закрыт" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -392,12 +408,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>352</line>
+          <line>353</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>786</line>
+          <line>791</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
