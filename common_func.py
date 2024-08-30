@@ -105,7 +105,7 @@ def convert_date_from_sql_format(date: str):
 
 def is_pallet_text_valid(text: str) -> bool:
     clen = len(text)
-    if clen < 9 or clen >= 20:
+    if clen < 9 or clen >= 35:
         return False
 
     if re.search(r'[^A-Z0-9]', text):

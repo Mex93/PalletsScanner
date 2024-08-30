@@ -737,7 +737,7 @@ class MainWindow(QMainWindow):
                     self.cpallet_label.set_error(2.0, "red", "Внимание!")
                     send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                                      text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
-                                          f"Длина SN номера паллета должна быть от 9 до 20 символов.",
+                                          f"Длина SN номера паллета должна быть от 9 до 35 символов.",
                                      title="Внимание!",
                                      variant_yes="Закрыть", variant_no="", callback=None)
                     self.csn_input.set_clear_label()
@@ -805,7 +805,7 @@ class MainWindow(QMainWindow):
             self.cpallet_label.set_error(2.0, "red", "Внимание!")
             send_message_box(icon_style=SMBOX_ICON_TYPE.ICON_WARNING,
                              text=f"Допускается вводить только цифры и буквы латинского алфавита!\n"
-                                  f"Длина SN номера паллета должна быть от 9 до 20 символов!",
+                                  f"Длина SN номера паллета должна быть от 9 до 35 символов!",
                              title="Внимание!",
                              variant_yes="Закрыть", variant_no="", callback=None)
             self.csn_input.set_clear_label()
