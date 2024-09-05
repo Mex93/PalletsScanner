@@ -60,6 +60,10 @@
   {
    "optionDest": "bootloader_ignore_signals",
    "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Ryazanov/PycharmProjects/palletScanner/config.ini;."
   }
  ],
  "nonPyinstallerOptions": {
