@@ -31,6 +31,9 @@ class CConfig:
         self.__CURRENT_LINE = ''  # Текущая производственная линия
         self.__AUTO_COMPLETE_WINDOW = ''  # Окно автозавершения паллета
 
+        self.__PRINTER_NAME = ''  # Название принтера
+        self.__TRICOLOR_USED = ''  # Включить или отключить проверку телеков на триколор
+
         self.__config = configparser.ConfigParser()
         self.__config.add_section('database')
         self.__config.add_section('program')
@@ -51,6 +54,8 @@ class CConfig:
         self.__TV_REPEAT_ERROR_TYPE = ''
         self.__CURRENT_LINE = ''
         self.__AUTO_COMPLETE_WINDOW = ''
+        self.__PRINTER_NAME = ''
+        self.__TRICOLOR_USED = ''
 
     def get_config(self):
         self.__config.read('config.ini', encoding="utf-8")
@@ -63,6 +68,8 @@ class CConfig:
 
         self.__SOFT_TYPE = self.__config.get('program', 'PROGRAM_JOB_TYPE')
         self.__CURRENT_LINE = self.__config.get('program', 'CURRENT_ASSEMBLED_LINE')
+        self.__TRICOLOR_USED = self.__config.get('program', 'TRICOLOR_USED')
+        self.__PRINTER_NAME = self.__config.get('program', 'PRINTER_NAME')
 
         self.__PALLET_ALL_PLACES = self.__config.get('pallet', 'PALLET_MAX_PLACES')
         self.__PALLET_AUTO_COMPLETE = self.__config.get('pallet', 'PALLET_AUTO_COMPLETE')
@@ -89,6 +96,8 @@ class CConfig:
 
             self.__config.set('program', 'PROGRAM_JOB_TYPE', str(JOB_TYPE.MAIN))
             self.__config.set('program', 'CURRENT_ASSEMBLED_LINE', "1")
+            self.__config.set('program', 'TRICOLOR_USED', "0")
+            self.__config.set('program', 'PRINTER_NAME', "NO")
 
             self.__config.set('pallet', 'PALLET_MAX_PLACES', '2')
             self.__config.set('pallet', 'PALLET_AUTO_COMPLETE', '1')
@@ -100,6 +109,23 @@ class CConfig:
 
             self.set_default_for_values()
             self.__config.write(config_file)
+
+    def get_printer_name(self) -> str | bool:
+        len_prname = len(self.__PRINTER_NAME)
+        if not len_prname:
+            return "NO"
+        if len_prname < 3:
+            return "NO"
+        return self.__PRINTER_NAME
+
+    def is_tricolor_used(self) -> bool:
+        len_prname = len(self.__TRICOLOR_USED)
+        if not len_prname:
+            return False
+        len_prname = bool(self.__TRICOLOR_USED)
+        if len_prname != 0 and len_prname != 1:
+            return False
+        return len_prname
 
     def get_current_line(self) -> int | None:
         line = int(self.__CURRENT_LINE)

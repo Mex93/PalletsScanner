@@ -17,6 +17,7 @@ from components.CControlPanel import CControlPanel
 from components.CSNInput import CSNinput
 from components.CPallet import CPallet
 from components.CExcelLog import CExcelLog
+from components.CPrinter import CPrinter
 from sql.CSQLQuerys import CSQLQuerys
 from sql.enums import CONNECT_DB_TYPE
 from sql.sql_data import SQL_PALLET_SCANNED, SQL_TABLE_TV_CONFIG, SQL_TABLE_ASSEMBLED_TV
@@ -65,6 +66,8 @@ class MainWindow(QMainWindow):
             max_places_in_pallets = self.cconfig.get_pallet_max_places()
             pallet_template = self.cconfig.get_pallet_template()
             tv_template = self.cconfig.get_tv_template()
+            self.used_tricolor = self.cconfig.is_tricolor_used()
+            self.printer_name = self.cconfig.get_printer_name()
 
             self.program_job_type = program_job_type
         except Exception as err:
@@ -77,7 +80,7 @@ class MainWindow(QMainWindow):
                              variant_yes="Закрыть", variant_no="", callback=lambda: self.set_close())
             return
         # classes
-
+        self.cprinter = CPrinter(self.printer_name)
         self.cpallets_box = CPalletInfoBOX(self.ui)
         self.cpallets_box.set_max_place(max_places_in_pallets)
         self.cpallets_box.set_block_frame()
