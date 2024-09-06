@@ -16,3 +16,13 @@ class SMBOX_ICON_TYPE(IntEnum):
     ICON_WARNING = auto(),
     ICON_ERROR = auto(),
     ICON_INFO = auto()
+
+
+class BARCODE_TYPE(IntEnum):
+    BAR_4 = auto(),
+    BAR_8 = auto(),
+    BAR_12 = auto(),
+    BAR_16 = auto(),
+    BAR_24 = auto(),
+    BAR_32 = auto(),
+    BAR_48 = auto()
