@@ -1,6 +1,9 @@
+import random
+
 import clr
 import sys
-
+import random
+MAX_PLACES_IN_BARCODE = 48
 
 class CPrinter:
     def __init__(self, printer_name: str):
@@ -10,29 +13,20 @@ class CPrinter:
         # Загрузите вашу DLL:
         clr.AddReference('LabelPrinterLibrary')
 
-        self.standart_ezpl = "\
-                ^Q8,3\n\
-                ^W48\n\
-                ^H10\n\
-                ^P1\n\
-                ^S2\n\
-                ^AT\n\
-                ^C1\n\
-                ^R0\n\
-                ~Q+0\n\
-                ^O0\n\
-                ^D0\n\
-                ^E18\n\
-                ~R255\n\
-                ^L\n\
-                Dy2-me-dd\n\
-                Th:m:s\n\
-                Y37,153,Image3-97\n\
-                Y37,153,Image2-72\n\
-                Y33,10,WindowText1-17\n\
-                BQ,92,8,2,5,20,0,3,THIS_TEST\n\
-                E\n\n"
-        self.standart_ezpl = self.standart_ezpl.replace(" ", "")
+        sn = ""
+        for index in range(24):
+            if random.randint(0, 2) == 0:
+                sn += "S"
+            else:
+                sn += "2"
+        print(sn)
+        tvlist = list(sn for item in range(12))
+        print(tvlist)
+
+        RESULT = self.send_print_label("P092401K43UH90215KV00045", tvlist, "KVANT", "TV Tricolor K43UH902 FL")
+        print("P092401K43UH90215KV00045", tvlist, "KVANT", "TV Tricolor K43UH902 FL")
+        print(RESULT)
+
 
 
     def __print_label(self, barcode_text):
@@ -40,17 +34,71 @@ class CPrinter:
         result = LabelPrinter.PrintBarcode(self.__printer_name, barcode_text)
         return result
 
-    def send_print_label(self, tricolor_key: str):
-        if len(tricolor_key) > 0:
+    @staticmethod
+    def get_barcode_name_from_tv_count(tv_count: int) -> str | bool:
+        if 1 <= tv_count <= 4:
+            return "barcode_template_4"
+        elif 5 <= tv_count <= 8:
+            return "barcode_template_8"
+        elif 9 <= tv_count <= 12:
+            return "barcode_template_12"
+        elif 13 <= tv_count <= 16:
+            return "barcode_template_16"
+        elif 17 <= tv_count <= 24:
+            return "barcode_template_24"
+        elif 25 <= tv_count <= 32:
+            return "barcode_template_32"
+        elif 33 <= tv_count <= 48:
+            return "barcode_template_48"
+        else:
+            return False
 
-            with open('../barcode_template.txt', 'w+') as file:
+    def send_print_label(self, pallet_sn: str, tv_list: list, assembled_tm: str, tv_model_name: str) -> bool:
+        # if isinstance((assembled_tm, tv_model_name), str) and isinstance(tv_list, list):
+        #
+        #     if len(pallet_sn) and len(assembled_tm) and len(tv_model_name):
+
+        count = len(tv_list)
+
+        barcode_template_name = self.get_barcode_name_from_tv_count(count)
+        if isinstance(barcode_template_name, str):
+            with open(f'barcodes/{barcode_template_name}.txt', 'r') as file:
                 ezpl_data = file.read()
-                if not len(ezpl_data):
-                    file.write(self.standart_ezpl)
-                    ezpl_data = self.standart_ezpl
-                ezpl_data = ezpl_data.replace("THIS_TEST", tricolor_key)
+                if len(ezpl_data) == 0:
+                    return False
+
+                ezpl_data = ezpl_data.replace("PALLET_CODE", pallet_sn)
+                ezpl_data = ezpl_data.replace("TV_COUNT", f"{str(count)} шт")
+                ezpl_data = ezpl_data.replace("TV_NAME", tv_model_name)
+                ezpl_data = ezpl_data.replace("KVANT", assembled_tm)
+                count_sym = 0
+                for index, tv in enumerate(tv_list, 0):
+                    print(index)
+                    clen = len(tv)
+                    if not clen:
+                        continue
+                    count_sym += clen
+                    ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", tv)
+                    ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", tv)
+
+                # удаление лишних
+                for index in range(0, MAX_PLACES_IN_BARCODE):
+
+                    if ezpl_data.find(f"TPLACE_{index:02}") != -1:
+                        ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", "")
+
+                    if ezpl_data.find(f"QPLACE_{index:02}") != -1:
+                        ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", "")
+
+                ezpl_data = ezpl_data.replace(f"COUNT_SYM", str(count_sym + count))
+                ezpl_data += '\n'
+                self.__print_label(ezpl_data)
+                print("FINAL")
+                print(ezpl_data)
+                return True
+
+
 
             # нельзя впереди этикетки что бы были пробелы!!!!!!
             # в документе должен быть пробел в самом конце после E
-
-            self.__print_label(ezpl_data)
+        #return False
