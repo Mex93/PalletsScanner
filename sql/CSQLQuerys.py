@@ -46,7 +46,7 @@ class CSQLQuerys(CSqlAgent):
 
     def get_pallet_info(self, pallet_code: str):
         """Инфа о паллете"""
-        query_string = (f"SELECT * "
+        query_string = (f"SELECT {SQL_PALLET_SCANNED.fd_tv_sn} "
                         f"FROM {SQL_TABLE_NAME.tb_pallet_scanned} "
                         f"WHERE {SQL_PALLET_SCANNED.fd_fk_pallet_code} = %s "
                         f"ORDER BY {SQL_PALLET_SCANNED.fd_assy_id} ASC "

@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
             tv_template = self.cconfig.get_tv_template()
             self.used_tricolor = self.cconfig.is_tricolor_used()
             self.printer_name = self.cconfig.get_printer_name()
+            self.is_print_barcode = self.cconfig.is_barcode_print()
 
             self.program_job_type = program_job_type
         except Exception as err:
@@ -406,7 +407,7 @@ class MainWindow(QMainWindow):
                                                       f"Паллет готов к отгрузке!",
                                                  title="Успех!",
                                                  variant_yes="Закрыть", variant_no="", callback=None)
-
+                                self.print_barcode(chosen_pallet, "KVANT", False)
                                 self.clear_current_pallet()
                                 # todo Паллет обнулён из за переполнения
 
@@ -421,6 +422,7 @@ class MainWindow(QMainWindow):
                                                       f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
                                                  title="Успех!",
                                                  variant_yes="Закрыть", variant_no="", callback=None)
+                                self.print_barcode(chosen_pallet, "KVANT", False)
                                 # todo Паллет набился но не обнулён, так как авто комплект отключен
                             return True
 
@@ -552,7 +554,7 @@ class MainWindow(QMainWindow):
 
                                             if self.set_pallet_completed_status(chosen_pallet, True) is False:
                                                 print("Внимание! Ошибка проставки даты комплектности паллета. Вызов: 2")
-
+                                            self.print_barcode(chosen_pallet, "KVANT", False)
                                             self.clear_current_pallet_no_color()
 
                                             # todo Паллет обнулён из за переполнения
@@ -564,6 +566,7 @@ class MainWindow(QMainWindow):
                                                                   f"Нажмите кнопку 'Завершить паллет', что бы закрыть выбранный паллет!",
                                                              title="Успех!",
                                                              variant_yes="Закрыть", variant_no="", callback=None)
+                                            self.print_barcode(chosen_pallet, "KVANT", False)
                                             # todo Паллет набился но не обнулён, так как авто комплект отключен
                                     else:
                                         self.cpallet_label.set_error(2.0, "grey", f"Устройство добавлено на паллет!")
@@ -723,6 +726,7 @@ class MainWindow(QMainWindow):
                                                       f"закрыть паллет, нажав на кнопку 'Завершить паллет'.",
                                                  title="Внимание!",
                                                  variant_yes="Закрыть", variant_no="", callback=None)
+                                self.print_barcode(input_text, "KVANT", False)
                                 # self.csn_input.set_clear_label()
                                 #
                                 # # сбрасываем бокс
@@ -1022,6 +1026,59 @@ class MainWindow(QMainWindow):
             self.cpallet_label.set_error(3.0, "yellow", f"Паллет '{pallette_code}' отменён!")
         else:
             pass
+
+    def print_barcode(self, pallet_sn: str, assembled_tm: str, sql_handle: any = False):
+        if self.is_print_barcode:
+            pname = self.printer_name
+            if pname != 'NO':
+
+                sql_new = False
+                if sql_handle is False:
+                    sql_new = True
+                    csql = CSQLQuerys()
+                else:
+                    csql = sql_handle
+                try:
+                    if sql_new is True:
+                        result_connect = csql.connect_to_db(CONNECT_DB_TYPE.LINE)
+                        if result_connect is False:
+                            return False
+                    tv_dict = csql.get_pallet_info(pallet_sn)
+                    if tv_dict is not False:
+                        any_tv_sn = tv_dict[0].get(SQL_PALLET_SCANNED.fd_tv_sn, None)
+                        if any_tv_sn is None:
+                            return False
+                        tv_list = list()
+                        for tv in tv_dict:
+                            current_tv = tv.get(SQL_PALLET_SCANNED.fd_tv_sn, None)
+                            if current_tv is None:
+                                continue
+                            tv_list.append(current_tv)
+                        if len(tv_list) > 0:
+                            result = csql.get_tv_info(any_tv_sn)
+                            if result is not False:
+                                tv_name = result.get(SQL_TABLE_TV_CONFIG.fd_tv_name, None)
+                                if tv_name is not None:
+                                    if self.used_tricolor == 1:
+
+                                        self.cprinter.send_print_label_tricolor(pallet_sn,
+                                                                                tv_list,
+                                                                                assembled_tm,
+                                                                                tv_name)
+                                    else:  # Обычная этикетка
+                                        self.cprinter.send_print_easy_label(pallet_sn, tv_name)
+
+                                    return True
+                except Exception as err:
+                    print(err)
+                    self.send_error_message(
+                        "Во время печати этикетки произошла ошибка.\n"
+                        "Обратитесь к системному администратору!\n\n"
+                        "Код ошибки: 'print_barcode -> std::get_data() -> No Data'")
+                finally:
+                    if sql_new is True:
+                        csql.disconnect_from_db()
+                return False
 
     def on_user_clicked_variant_btn_pallette_complete(self, val):
         if val.text() == "Да":

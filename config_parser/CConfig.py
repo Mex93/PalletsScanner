@@ -4,6 +4,7 @@ from cryptography.fernet import Fernet
 
 from sql.CSQLAgent import CSqlAgent
 from enums import JOB_TYPE, REPEAT_TV_ERROR_TYPES
+
 MAX_PALLET_PLACES = 60
 
 
@@ -33,6 +34,7 @@ class CConfig:
 
         self.__PRINTER_NAME = ''  # Название принтера
         self.__TRICOLOR_USED = ''  # Включить или отключить проверку телеков на триколор
+        self.__IS_PRINT_BARCODE = ''  # Отключает и включает печать этикетки
 
         self.__config = configparser.ConfigParser()
         self.__config.add_section('database')
@@ -56,6 +58,7 @@ class CConfig:
         self.__AUTO_COMPLETE_WINDOW = ''
         self.__PRINTER_NAME = ''
         self.__TRICOLOR_USED = ''
+        self.__IS_PRINT_BARCODE = ''
 
     def get_config(self):
         self.__config.read('config.ini', encoding="utf-8")
@@ -70,6 +73,7 @@ class CConfig:
         self.__CURRENT_LINE = self.__config.get('program', 'CURRENT_ASSEMBLED_LINE')
         self.__TRICOLOR_USED = self.__config.get('program', 'TRICOLOR_USED')
         self.__PRINTER_NAME = self.__config.get('program', 'PRINTER_NAME')
+        self.__IS_PRINT_BARCODE = self.__config.get('program', 'PRINT_BARCODE')
 
         self.__PALLET_ALL_PLACES = self.__config.get('pallet', 'PALLET_MAX_PLACES')
         self.__PALLET_AUTO_COMPLETE = self.__config.get('pallet', 'PALLET_AUTO_COMPLETE')
@@ -78,7 +82,6 @@ class CConfig:
 
         self.__TV_TEMPLATE = self.__config.get('tv', 'TV_TEMPLATE')
         self.__TV_REPEAT_ERROR_TYPE = self.__config.get('tv', 'TV_REPEAT_ERROR_TYPE')
-
 
     @staticmethod
     def is_config_created():
@@ -98,6 +101,7 @@ class CConfig:
             self.__config.set('program', 'CURRENT_ASSEMBLED_LINE', "1")
             self.__config.set('program', 'TRICOLOR_USED', "0")
             self.__config.set('program', 'PRINTER_NAME', "NO")
+            self.__config.set('program', 'PRINT_BARCODE', "0")
 
             self.__config.set('pallet', 'PALLET_MAX_PLACES', '2')
             self.__config.set('pallet', 'PALLET_AUTO_COMPLETE', '1')
@@ -118,13 +122,22 @@ class CConfig:
             return "NO"
         return self.__PRINTER_NAME
 
-    def is_tricolor_used(self) -> bool:
+    def is_barcode_print(self) -> int:
+        len_prname = len(self.__IS_PRINT_BARCODE)
+        if not len_prname:
+            return 0
+        len_prname = int(self.__IS_PRINT_BARCODE)
+        if len_prname != 0 and len_prname != 1:
+            return 0
+        return len_prname
+
+    def is_tricolor_used(self) -> int:
         len_prname = len(self.__TRICOLOR_USED)
         if not len_prname:
-            return False
-        len_prname = bool(self.__TRICOLOR_USED)
+            return 0
+        len_prname = int(self.__TRICOLOR_USED)
         if len_prname != 0 and len_prname != 1:
-            return False
+            return 0
         return len_prname
 
     def get_current_line(self) -> int | None:
@@ -141,7 +154,6 @@ class CConfig:
             return REPEAT_TV_ERROR_TYPES.CHAT_MESSAGE
         else:
             return REPEAT_TV_ERROR_TYPES.WINDOW
-
 
     def get_pallet_template(self) -> str:
         template = self.__PALLET_TEMPLATE

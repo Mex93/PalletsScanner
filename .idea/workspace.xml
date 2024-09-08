@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b0b10951-2709-4192-8d56-568f008c45ea" name="Changes" comment="35 символов на паллет">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/barcode_template.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/CPrinter.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/CPrinter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/interface.ui" beforeDir="false" afterPath="$PROJECT_DIR$/ui/interface.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config_parser/CConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config_parser/CConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/CSQLQuerys.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/CSQLQuerys.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -409,7 +410,23 @@
       <option name="project" value="LOCAL" />
       <updated>1725609269718</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="35 символов на паллет">
+      <option name="closed" value="true" />
+      <created>1725631034487</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1725631034487</updated>
+    </task>
+    <task id="LOCAL-00040" summary="35 символов на паллет">
+      <option name="closed" value="true" />
+      <created>1725632450506</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1725632450506</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -449,12 +466,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>356</line>
+          <line>357</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Window.py</url>
-          <line>794</line>
+          <line>798</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

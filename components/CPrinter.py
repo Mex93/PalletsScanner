@@ -15,14 +15,14 @@ class CPrinter:
         # Загрузите вашу DLL:
         clr.AddReference('LabelPrinterLibrary')
 
-        sn = "2409K14F2K43UH90202758"
+        # sn = "2409K14F2K43UH90202758"
         # for index in range(6):
         #     if random.randint(0, 2) == 0:
         #         sn += "S"
         #     else:
         #         sn += "2"
         # print(sn)
-        # tvlist = list(sn for item in range(1))
+        # tvlist = list(sn for item in range(12))
         # print(tvlist)
         #
         # RESULT = self.send_print_label("P092401K43UH90215KV00045", tvlist, "KVANT", "TV Tricolor K43UH902 FL")
@@ -73,43 +73,61 @@ class CPrinter:
         else:
             return False
 
-    def send_print_label(self, pallet_sn: str, tv_list: list, assembled_tm: str, tv_model_name: str) -> bool:
+    def send_print_easy_label(self, pallet_sn: str, tv_model_name: str) -> bool:
+        with open(f'barcodes/barcode_template_standart.txt', 'r') as file:
+            ezpl_data = file.read()
+            if len(ezpl_data) == 0:
+                return False
+            dots_start_tv_name = (800 - (22 * len(tv_model_name))) / 2
+            dots_start_qr = (800 - (22 * len(pallet_sn))) / 2
+            ezpl_data = ezpl_data.replace("TV_SHIFT_VERTICAL_COUNT", str(int(dots_start_tv_name)))
+            ezpl_data = ezpl_data.replace("QR_SHIFT_VERTICAL_COUNT", str(int(dots_start_qr)))
+            ezpl_data = ezpl_data.replace("TV_NAME", tv_model_name)
+            ezpl_data = ezpl_data.replace("PALLET_CODE", pallet_sn)
+            self.__print_label(ezpl_data)
+            print("PRINT")
+            # print(ezpl_data)
+            return True
+
+    def send_print_label_tricolor(self, pallet_sn: str, tv_list: list, assembled_tm: str, tv_model_name: str) -> bool:
         count = len(tv_list)
+        if count > 0:
+            barcode_template_type = self.get_barcode_type_from_tv_count(count)
+            if isinstance(barcode_template_type, BARCODE_TYPE):
+                barcode_template_name = self.get_barcode_name_from_barcode_type(barcode_template_type)
+                if isinstance(barcode_template_name, str):
+                    with open(f'barcodes/{barcode_template_name}.txt', 'r') as file:
+                        ezpl_data = file.read()
+                        if len(ezpl_data) == 0:
+                            return False
 
-        barcode_template_type = self.get_barcode_type_from_tv_count(count)
-        if isinstance(barcode_template_type, BARCODE_TYPE):
-            barcode_template_name = self.get_barcode_name_from_barcode_type(barcode_template_type)
-            if isinstance(barcode_template_name, str):
-                with open(f'barcodes/{barcode_template_name}.txt', 'r') as file:
-                    ezpl_data = file.read()
-                    if len(ezpl_data) == 0:
-                        return False
+                        ezpl_data = ezpl_data.replace("TV_COUNT", f"{str(count)} шт")
+                        ezpl_data = ezpl_data.replace("TV_NAME", tv_model_name)
+                        ezpl_data = ezpl_data.replace("KVANT", assembled_tm)
+                        count_sym = 0
+                        for index, tv in enumerate(tv_list, 0):
+                            clen = len(tv)
+                            if not clen:
+                                continue
+                            count_sym += clen
+                            ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", tv)
+                            ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", tv)
 
-                    ezpl_data = ezpl_data.replace("PALLET_CODE", pallet_sn)
-                    ezpl_data = ezpl_data.replace("TV_COUNT", f"{str(count)} шт")
-                    ezpl_data = ezpl_data.replace("TV_NAME", tv_model_name)
-                    ezpl_data = ezpl_data.replace("KVANT", assembled_tm)
-                    count_sym = 0
-                    for index, tv in enumerate(tv_list, 0):
-                        clen = len(tv)
-                        if not clen:
-                            continue
-                        count_sym += clen
-                        ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", tv)
-                        ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", tv)
+                        # удаление лишних
+                        for index in range(0, MAX_PLACES_IN_BARCODE):
 
-                    # удаление лишних
-                    for index in range(0, MAX_PLACES_IN_BARCODE):
+                            if ezpl_data.find(f"TPLACE_{index:02}") != -1:
+                                ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", "")
 
-                        if ezpl_data.find(f"TPLACE_{index:02}") != -1:
-                            ezpl_data = ezpl_data.replace(f"TPLACE_{index:02}", "")
+                            if ezpl_data.find(f"QPLACE_{index:02}") != -1:
+                                ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", "")
 
-                        if ezpl_data.find(f"QPLACE_{index:02}") != -1:
-                            ezpl_data = ezpl_data.replace(f"QPLACE_{index:02}", "")
-
-                    ezpl_data = ezpl_data.replace(f"COUNT_SYM", str(count_sym + count))
-                    ezpl_data += '\n'
-                    self.__print_label(ezpl_data)
-                    print("FINAL")
-                    print(ezpl_data)
-                    return True
+                        ezpl_data = ezpl_data.replace("QPALLET_CODE_COUNT_SYM", str(len(pallet_sn)))
+                        ezpl_data = ezpl_data.replace(f"COUNT_SYM", str(count_sym + count))
+                        ezpl_data = ezpl_data.replace("PALLET_CODE", pallet_sn)
+                        ezpl_data += '\n'
+                        self.__print_label(ezpl_data)
+                        print("PRINT")
+                        # print(ezpl_data)
+                        return True
+        return False
