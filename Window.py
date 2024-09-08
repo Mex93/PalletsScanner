@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.__base_program_version = "0.5"  # Менять при каждом обновлении
+        self.__base_program_version = "0.6 Tricolor"  # Менять при каждом обновлении
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.set_block_interface()
